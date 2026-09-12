@@ -1,0 +1,115 @@
+<div class="login-split-container">
+  <!-- Left Side: Background Image Pane (Desktop Only) -->
+  <div class="login-image-pane">
+    <div class="image-overlay-content">
+      <h2>Visualize Your Code Architecture</h2>
+      <p>Explore real-time dependency graphs, track structural changes, and optimize your codebase seamlessly with CodeGraph.</p>
+    </div>
+  </div>
+
+  <!-- Right Side: Login Form Section -->
+  <div class="login-form-pane">
+    <button
+      mat-icon-button
+      class="home-button"
+      type="button"
+      routerLink="/home"
+      aria-label="Go to home"
+      matTooltip="Home">
+      <mat-icon>home</mat-icon>
+    </button>
+
+    <div class="login-content-wrapper">
+      
+      <!-- Header -->
+      <div class="login-header">
+        <div class="brand-icon-wrapper">
+          <mat-icon class="material-symbols-outlined">graph_3</mat-icon>
+        </div>
+        <h1>Welcome to CodeGraph</h1>
+        <p>Sign in to your CodeGraph workspace</p>
+      </div>
+
+      <!-- Form -->
+      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="login-form">
+
+        <!-- Error Alert Banner -->
+        <div class="error-banner" *ngIf="errorMessage">
+          <mat-icon>error_outline</mat-icon>
+          <span>{{ errorMessage }}</span>
+        </div>
+
+        <!-- Email Field -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Email Address</mat-label>
+          <input 
+            matInput 
+            type="email" 
+            formControlName="email" 
+            placeholder="name@example.com"
+            autocomplete="email"
+            required>
+          <mat-icon matPrefix>email</mat-icon>
+          <mat-error *ngIf="loginForm.get('email')?.hasError('required')">
+            Email is required
+          </mat-error>
+          <mat-error *ngIf="loginForm.get('email')?.hasError('email')">
+            Please enter a valid email address
+          </mat-error>
+        </mat-form-field>
+
+        <!-- Password Field -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Password</mat-label>
+          <input 
+            matInput 
+            [type]="hidePassword ? 'password' : 'text'" 
+            formControlName="password" 
+            placeholder="Enter your password"
+            autocomplete="current-password"
+            required>
+          <mat-icon matPrefix>lock</mat-icon>
+          <button 
+            mat-icon-button 
+            matSuffix 
+            type="button" 
+            (click)="hidePassword = !hidePassword" 
+            [attr.aria-label]="'Hide password'" 
+            [attr.aria-pressed]="hidePassword">
+            <mat-icon>{{ hidePassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+          </button>
+          <mat-error *ngIf="loginForm.get('password')?.hasError('required')">
+            Password is required
+          </mat-error>
+          <mat-error *ngIf="loginForm.get('password')?.hasError('minlength')">
+            Password must be at least 6 characters long
+          </mat-error>
+        </mat-form-field>
+
+        <!-- Form Actions -->
+        <div class="form-actions-row">
+          <mat-checkbox formControlName="rememberMe">Remember me</mat-checkbox>
+          <a routerLink="/forgot-password" class="forgot-password-link">Forgot password?</a>
+        </div>
+
+        <!-- Submit Button -->
+        <button 
+          mat-flat-button 
+          color="primary" 
+          class="submit-btn" 
+          type="submit" 
+          [disabled]="loginForm.invalid || isLoading">
+          <mat-spinner diameter="20" *ngIf="isLoading" class="spinner"></mat-spinner>
+          <span *ngIf="!isLoading">Sign In</span>
+        </button>
+
+      </form>
+
+      <!-- Footer Prompt -->
+      <div class="login-footer">
+        <p>Don't have an account? <a routerLink="/register">Create an account</a></p>
+      </div>
+
+    </div>
+  </div>
+</div>

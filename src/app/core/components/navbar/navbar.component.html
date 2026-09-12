@@ -1,0 +1,178 @@
+<mat-toolbar color="primary" class="navbar">
+  <!-- Drawer & Sidebar Toggles -->
+  <button *ngIf="isHandset" mat-icon-button aria-label="Toggle navigation menu" (click)="onMenuClick()">
+    <mat-icon>menu</mat-icon>
+  </button>
+
+  <button
+    *ngIf="(currentUser$ | async) && (isDashboardRoute$ | async)"
+    mat-icon-button
+    aria-label="Toggle workspace sidebar"
+    matTooltip="Toggle workspace sidebar"
+    (click)="onToggleDashboardSidebar()"
+  >
+    <mat-icon class="material-symbols-outlined">dashboard_2_gear</mat-icon>
+  </button>
+
+  <!-- Brand -->
+  <a mat-button routerLink="/" class="brand-link">
+    <mat-icon class="material-symbols-outlined">graph_3</mat-icon>
+    <span>CodeGraph</span>
+  </a>
+
+  <!-- Desktop Navigation -->
+  <nav class="nav-links" *ngIf="!isHandset">
+    <a mat-button routerLink="/" routerLinkActive="active-nav" [routerLinkActiveOptions]="{ exact: true }">
+      <mat-icon>home</mat-icon>
+      <span>Home</span>
+    </a>
+    <a *ngIf="currentUser$ | async" mat-button routerLink="/dashboard" routerLinkActive="active-nav">
+      <mat-icon>dashboard</mat-icon>
+      <span>Dashboard</span>
+    </a>
+  </nav>
+
+  <span class="spacer"></span>
+
+  <!-- Segmented Theme Toggle -->
+  <mat-button-toggle-group
+    class="theme-segmented-group"
+    hideSingleSelectionIndicator
+    [value]="themePreference$ | async"
+    (change)="onSetTheme($event.value)"
+    aria-label="Theme preference"
+  >
+    <mat-button-toggle value="light" matTooltip="Light Mode" aria-label="Light Mode">
+      <mat-icon>light_mode</mat-icon>
+    </mat-button-toggle>
+    <mat-button-toggle value="system" matTooltip="System Default" aria-label="System Default">
+      <mat-icon>settings_brightness</mat-icon>
+    </mat-button-toggle>
+    <mat-button-toggle value="dark" matTooltip="Dark Mode" aria-label="Dark Mode">
+      <mat-icon>dark_mode</mat-icon>
+    </mat-button-toggle>
+  </mat-button-toggle-group>
+
+  <!-- Notifications -->
+  <!-- Notifications -->
+<ng-container *ngIf="currentUser$ | async">
+  <button
+    mat-icon-button
+    [matMenuTriggerFor]="notificationMenu"
+    aria-label="Notifications"
+    matTooltip="Notifications"
+  >
+    <mat-icon
+      [matBadge]="unreadNotificationsCount$ | async"
+      [matBadgeHidden]="(unreadNotificationsCount$ | async) === 0"
+      matBadgeColor="warn"
+      matBadgeSize="small"
+    >
+      notifications
+    </mat-icon>
+  </button>
+
+  <mat-menu #notificationMenu="matMenu" class="notification-menu" xPosition="before">
+  <!-- Header -->
+  <div class="notification-header" (click)="$event.stopPropagation()">
+    <span class="header-title">Notifications</span>
+    <button
+      *ngIf="(unreadNotificationsCount$ | async) ?? 0 > 0"
+      mat-button
+      color="primary"
+      class="mark-read-btn"
+      (click)="onMarkAllNotificationsRead()"
+    >
+      Mark all read
+    </button>
+  </div>
+  <mat-divider></mat-divider>
+
+  <!-- List -->
+  <div class="notification-content" (click)="$event.stopPropagation()">
+    <ng-container *ngIf="notifications$ | async as notifications">
+      <div *ngIf="notifications.length === 0" class="empty-state">
+        <mat-icon>notifications_off</mat-icon>
+        <p>No notifications yet</p>
+      </div>
+
+      <div class="notification-list" *ngIf="notifications.length > 0">
+        <div
+          class="notification-item"
+          *ngFor="let item of notifications"
+          [class.unread]="!item.read"
+          (click)="onSelectNotification(item)"
+        >
+          <!-- Left Icon -->
+          <mat-icon class="item-icon" [color]="item.type === 'alert' ? 'warn' : 'accent'">
+            {{ item.icon || 'info' }}
+          </mat-icon>
+
+          <!-- Middle Details -->
+          <div class="item-body">
+            <div class="item-title">{{ item.title }}</div>
+            <div class="item-desc">{{ item.message }}</div>
+          </div>
+
+          <!-- Right Timestamp -->
+          <span class="item-time">{{ item.createdAt | date:'shortTime' }}</span>
+        </div>
+      </div>
+    </ng-container>
+  </div>
+
+  <!-- Footer -->
+  <mat-divider></mat-divider>
+  <div class="notification-footer">
+    <a mat-button routerLink="/dashboard/notifications" class="view-all-btn">
+      View all notifications
+    </a>
+  </div>
+</mat-menu>
+</ng-container>
+
+  <!-- Auth State: User Profile Pill & Dropdown -->
+  <ng-container *ngIf="currentUser$ | async as user; else signinTemplate">
+    <button mat-button class="profile-pill" [matMenuTriggerFor]="userMenu" aria-label="User account menu">
+      <span class="avatar-badge">{{ user.email ? (user.email | slice:0:1 | uppercase) : 'U' }}</span>
+      <span *ngIf="!isHandset" class="profile-email">{{ user.email }}</span>
+      <mat-icon class="chevron">expand_more</mat-icon>
+    </button>
+
+    <mat-menu #userMenu="matMenu" class="user-account-menu" xPosition="before">
+      <div class="menu-header">
+        <span class="avatar-badge lg">{{ user.email ? (user.email | slice:0:1 | uppercase) : 'U' }}</span>
+        <div class="user-meta">
+          <small>ACCOUNT</small>
+          <span class="user-email-text" [matTooltip]="user.email">{{ user.email }}</span>
+        </div>
+      </div>
+
+      <mat-divider></mat-divider>
+
+      <button mat-menu-item routerLink="/dashboard/user/profile">
+        <mat-icon class="material-symbols-outlined">person</mat-icon>
+        <span>My Profile</span>
+      </button>
+
+      <button mat-menu-item routerLink="/dashboard/settings">
+        <mat-icon class="material-symbols-outlined">settings</mat-icon>
+        <span>Preferences</span>
+      </button>
+
+      <mat-divider></mat-divider>
+
+      <button mat-menu-item class="logout-btn" (click)="onLogout()">
+        <mat-icon class="material-symbols-outlined">logout</mat-icon>
+        <span>Sign Out</span>
+      </button>
+    </mat-menu>
+  </ng-container>
+
+  <ng-template #signinTemplate>
+    <a mat-flat-button color="accent" routerLink="/login">
+      <mat-icon>account_circle</mat-icon>
+      <span *ngIf="!isHandset">Sign In</span>
+    </a>
+  </ng-template>
+</mat-toolbar>

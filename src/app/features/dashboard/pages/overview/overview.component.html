@@ -1,0 +1,165 @@
+<div class="overview-grid">
+  <!-- 1. Quick Actions Row -->
+  <section class="quick-actions-bar mat-elevation-z1">
+    <div class="actions-label">
+      <mat-icon class="label-icon">bolt</mat-icon>
+      <span>Quick Operations</span>
+    </div>
+
+    <div class="buttons-group">
+      <ng-container *ngFor="let action of quickActions">
+        <!-- Primary Flat Button -->
+        <button
+          *ngIf="action.variant === 'flat'"
+          mat-flat-button
+          [color]="action.color || 'primary'"
+          (click)="onQuickAction(action.id)"
+        >
+          <mat-icon class="material-symbols-outlined">{{ action.icon }}</mat-icon>
+          <span>{{ action.label }}</span>
+        </button>
+
+        <!-- Stroked Secondary Button -->
+        <button
+          *ngIf="action.variant === 'stroked'"
+          mat-stroked-button
+          [color]="action.color"
+          (click)="onQuickAction(action.id)"
+        >
+          <mat-icon class="material-symbols-outlined">{{ action.icon }}</mat-icon>
+          <span>{{ action.label }}</span>
+        </button>
+
+        <!-- Icon-Only Button -->
+        <button
+          *ngIf="action.variant === 'icon'"
+          mat-icon-button
+          [color]="action.color"
+          [matTooltip]="action.tooltip || action.label"
+          [attr.aria-label]="action.label"
+          (click)="onQuickAction(action.id)"
+        >
+          <mat-icon class="material-symbols-outlined">{{ action.icon }}</mat-icon>
+        </button>
+      </ng-container>
+    </div>
+  </section>
+
+  <!-- 2. Favorites Section -->
+  <section class="favorites-section">
+    <div class="section-title-bar">
+      <div class="title-meta">
+        <mat-icon class="star-accent">star</mat-icon>
+        <span class="title-text">Pinned Favorites</span>
+        <span class="badge">{{ favorites.length }}</span>
+      </div>
+      <button mat-button color="primary" class="manage-btn" (click)="onManageFavorites()">
+        <mat-icon>settings</mat-icon>
+        <span>Manage</span>
+      </button>
+    </div>
+
+    <!-- Favorites Grid -->
+    <div class="favorites-grid" *ngIf="favorites.length > 0; else noFavorites">
+      <mat-card
+        *ngFor="let fav of favorites"
+        class="favorite-card mat-elevation-z1"
+        appearance="outlined"
+        (click)="onNavigateFavorite(fav)"
+      >
+        <div class="card-top">
+          <div class="icon-bubble" [ngClass]="fav.type">
+            <mat-icon>{{ fav.icon }}</mat-icon>
+          </div>
+          <button
+            mat-icon-button
+            class="star-toggle"
+            matTooltip="Remove from favorites"
+            (click)="onToggleFavorite($event, fav.id)"
+          >
+            <mat-icon class="active-star">star</mat-icon>
+          </button>
+        </div>
+
+        <div class="fav-title" [matTooltip]="fav.name">{{ fav.name }}</div>
+        <div class="fav-route">{{ fav.route }}</div>
+      </mat-card>
+    </div>
+
+    <!-- Empty State -->
+    <ng-template #noFavorites>
+      <div class="empty-favorites mat-elevation-z1">
+        <mat-icon class="empty-icon">star_outline</mat-icon>
+        <span class="empty-text">No favorites pinned yet. Click the star icon on any cluster or resource to pin it here.</span>
+      </div>
+    </ng-template>
+  </section>
+
+  <app-system-info></app-system-info>
+
+  <!-- 4. Split Cluster Health & Activity Log -->
+  <section class="dashboard-split-view">
+    <!-- Active Clusters Table -->
+    <mat-card class="section-card mat-elevation-z1" appearance="outlined">
+      <mat-card-header>
+        <mat-card-title>Cluster Partition Status</mat-card-title>
+        <mat-card-subtitle>Live telemetry across AST processing worker pools</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="table-responsive">
+          <table class="status-table">
+            <thead>
+              <tr>
+                <th>Cluster Partition</th>
+                <th>Nodes</th>
+                <th>Status</th>
+                <th>Latency</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let c of clusters">
+                <td class="code-font">{{ c.cluster }}</td>
+                <td>{{ c.nodesCount | number }}</td>
+                <td>
+                  <span class="status-badge" [ngClass]="c.status.toLowerCase()">
+                    {{ c.status }}
+                  </span>
+                </td>
+                <td class="code-font">{{ c.latency }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- Recent System Activity -->
+    <mat-card class="section-card mat-elevation-z1" appearance="outlined">
+      <mat-card-header>
+        <mat-card-title>System Operations Log</mat-card-title>
+        <mat-card-subtitle>Recent automated parser and indexing tasks</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content>
+        <mat-list>
+          <mat-list-item *ngFor="let event of recentEvents; let last = last">
+            <mat-icon matListItemIcon [ngClass]="event.severity">
+              {{
+                event.severity === "success"
+                  ? "check_circle"
+                  : event.severity === "warn"
+                    ? "warning"
+                    : "info"
+              }}
+            </mat-icon>
+            <div matListItemTitle class="event-title">{{ event.action }}</div>
+            <div matListItemLine class="event-meta">
+              <span class="target">{{ event.target }}</span> &bull;
+              <span class="time">{{ event.timestamp }}</span>
+            </div>
+            <mat-divider *ngIf="!last"></mat-divider>
+          </mat-list-item>
+        </mat-list>
+      </mat-card-content>
+    </mat-card>
+  </section>
+</div>

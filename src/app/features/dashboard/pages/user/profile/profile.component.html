@@ -1,0 +1,120 @@
+<form [formGroup]="profileForm" (ngSubmit)="onSubmit()" class="profile-form">
+  <!-- Top Header with Actions -->
+  <div class="profile-header">
+    <div>
+      <h2>User Profile</h2>
+      <p class="subtitle">
+        Manage identity details, bio, and account metadata. Mode:
+        <strong>{{ isExistingProfile ? 'Update' : 'Create' }}</strong>
+      </p>
+    </div>
+    <div class="actions">
+      <button
+        mat-button
+        type="button"
+        (click)="onReset()"
+        [disabled]="isSubmitting || profileForm.pristine || isLoading"
+      >
+        Reset
+      </button>
+      <button
+        mat-flat-button
+        color="primary"
+        type="submit"
+        [disabled]="isSubmitting || (isExistingProfile && profileForm.pristine) || isLoading"
+      >
+        {{ isExistingProfile ? 'Save Changes' : 'Create Profile' }}
+      </button>
+    </div>
+  </div>
+
+  <div class="profile-sections">
+    <!-- Section 1: Identity & Demographics -->
+    <mat-card class="profile-card mat-elevation-z1" appearance="outlined">
+      <mat-card-header>
+        <mat-icon mat-card-avatar color="primary">badge</mat-icon>
+        <mat-card-title>Identity & Demographics</mat-card-title>
+        <mat-card-subtitle>Configure your public alias, date of birth, and identity markers</mat-card-subtitle>
+      </mat-card-header>
+
+      <mat-card-content class="form-content">
+        <div class="inputs-grid">
+          <!-- Display Name -->
+          <mat-form-field appearance="outline">
+            <mat-label>Name</mat-label>
+            <input matInput formControlName="displayName"  />
+            <mat-icon matPrefix>person</mat-icon>
+            <mat-error *ngIf="profileForm.get('displayName')?.hasError('required')">
+              Name is required
+            </mat-error>
+          </mat-form-field>
+
+          <!-- Gender -->
+          <mat-form-field appearance="outline">
+            <mat-label>Gender</mat-label>
+            <mat-select formControlName="gender">
+              <mat-option *ngFor="let option of genderOptions" [value]="option.value">
+                {{ option.label }}
+              </mat-option>
+            </mat-select>
+            <mat-icon matPrefix>wc</mat-icon>
+            <mat-error *ngIf="profileForm.get('gender')?.hasError('required')">
+              Please select a gender
+            </mat-error>
+          </mat-form-field>
+
+          <!-- Date of Birth -->
+          <mat-form-field appearance="outline">
+            <mat-label>Date of Birth</mat-label>
+            <input matInput [matDatepicker]="picker" formControlName="dateOfBirth" />
+            <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+            <mat-error *ngIf="profileForm.get('dateOfBirth')?.hasError('required')">
+              Date of birth is required
+            </mat-error>
+          </mat-form-field>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- Section 2: Regional & Bio Information -->
+    <mat-card class="profile-card mat-elevation-z1" appearance="outlined">
+      <mat-card-header>
+        <mat-icon mat-card-avatar color="accent">location_on</mat-icon>
+        <mat-card-title>Regional & Narrative Data</mat-card-title>
+        <mat-card-subtitle>Geographic context and your profile summary</mat-card-subtitle>
+      </mat-card-header>
+
+      <mat-card-content class="form-content">
+        <div class="inputs-grid single-row">
+          <!-- Location -->
+          <mat-form-field appearance="outline">
+            <mat-label>Location</mat-label>
+            <input matInput formControlName="location" placeholder="e.g. kannur" />
+            <mat-icon matPrefix>near_me</mat-icon>
+            <mat-error *ngIf="profileForm.get('location')?.hasError('required')">
+              Location is required
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <mat-divider></mat-divider>
+
+        <!-- Full-Width Bio Area -->
+        <div class="field-row full-width-row">
+          <mat-form-field appearance="outline" class="full-field">
+            <mat-label>Bio</mat-label>
+            <textarea
+              matInput
+              rows="3"
+              formControlName="bio"
+              placeholder="Tell us a little bit about yourself..."
+            ></textarea>
+            <mat-icon matPrefix>edit_note</mat-icon>
+            <mat-hint align="end">{{ profileForm.get('bio')?.value?.length || 0 }}/300</mat-hint>
+          </mat-form-field>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</form>

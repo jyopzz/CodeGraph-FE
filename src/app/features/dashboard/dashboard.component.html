@@ -1,0 +1,82 @@
+<ng-container *ngIf="{ isHandset: (isHandset$ | async) } as state">
+  <mat-sidenav-container class="dashboard-sidenav-container">
+    <!-- Responsive Workspace Sidebar -->
+    <mat-sidenav
+      #dashboardSidenav
+      class="dashboard-sidenav"
+      [mode]="state.isHandset ? 'over' : 'side'"
+      [opened]="!state.isHandset"
+      [fixedInViewport]="state.isHandset"
+    >
+      <div class="sidebar-header">
+        <mat-icon class="header-icon">lan</mat-icon>
+        <span class="header-title">Workspace Nodes</span>
+      </div>
+
+      <mat-divider></mat-divider>
+
+      <!-- Sidebar Navigation List -->
+      <mat-nav-list class="dashboard-nav-list">
+        <ng-container *ngFor="let item of navItems">
+          <!-- 1. Single Direct Link -->
+          <a
+            mat-list-item
+            *ngIf="!item.children"
+            [routerLink]="item.route"
+            routerLinkActive="active-dashboard-item"
+            [routerLinkActiveOptions]="{ exact: !!item.exact }"
+            (click)="onLinkClick(state.isHandset ?? false)"
+          >
+            <mat-icon matListItemIcon>{{ item.icon }}</mat-icon>
+            <span matListItemTitle>{{ item.label }}</span>
+          </a>
+
+          <!-- 2. Dropdown Group (Accordion Panel) -->
+          <mat-accordion *ngIf="item.children" class="sidebar-accordion">
+            <mat-expansion-panel
+              class="sidebar-expansion-panel mat-elevation-z0"
+            >
+              <mat-expansion-panel-header
+                class="sidebar-expansion-header"
+                [collapsedHeight]="'48px'"
+                [expandedHeight]="'48px'"
+              >
+                <div class="expansion-header-inner">
+                  <mat-icon class="sidebar-nav-icon">{{ item.icon }}</mat-icon>
+                  <span class="sidebar-nav-text">{{ item.label }}</span>
+                </div>
+              </mat-expansion-panel-header>
+
+              <!-- Sub-items -->
+              <div class="sub-nav-list">
+                <a
+                  mat-list-item
+                  *ngFor="let child of item.children"
+                  [routerLink]="child.route"
+                  routerLinkActive="active-dashboard-item"
+                  [routerLinkActiveOptions]="{ exact: !!child.exact }"
+                  (click)="onLinkClick(state.isHandset ?? false)"
+                  [matTooltip]="child.label"
+                  matTooltipPosition="after"
+                >
+                  <mat-icon matListItemIcon class="sub-icon">{{
+                    child.icon
+                  }}</mat-icon>
+                  <span matListItemTitle>{{ child.label }}</span>
+                  
+                </a>
+              </div>
+            </mat-expansion-panel>
+          </mat-accordion>
+        </ng-container>
+      </mat-nav-list>
+    </mat-sidenav>
+
+    <!-- Workspace Main Content Viewport -->
+    <mat-sidenav-content class="dashboard-main-content">
+      <main class="workspace-viewport">
+        <router-outlet></router-outlet>
+      </main>
+    </mat-sidenav-content>
+  </mat-sidenav-container>
+</ng-container>

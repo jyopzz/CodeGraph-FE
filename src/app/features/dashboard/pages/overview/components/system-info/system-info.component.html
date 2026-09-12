@@ -1,0 +1,96 @@
+<mat-card class="system-bridge-card mat-elevation-z1" appearance="outlined">
+  <mat-card-header>
+    <div class="header-left">
+      <div class="bridge-indicator-wrap" [ngClass]="agentStatus.connected ? 'online' : 'offline'">
+        <mat-icon>{{ agentStatus.connected ? 'desktop_windows' : 'desktop_access_disabled' }}</mat-icon>
+      </div>
+
+      <div class="header-meta">
+        <div class="title-row">
+          <mat-card-title>Local Windows Application Bridge</mat-card-title>
+          <span class="bridge-badge" [ngClass]="agentStatus.connected ? 'connected' : 'disconnected'">
+            {{ agentStatus.connected ? 'Agent Active' : 'Agent Unreachable' }}
+          </span>
+        </div>
+        <mat-card-subtitle>
+          {{ agentStatus.serviceName }} &bull; Port: 127.0.0.1:{{ agentStatus.port }}
+        </mat-card-subtitle>
+      </div>
+    </div>
+
+    <div class="header-actions">
+      <button
+        mat-stroked-button
+        color="primary"
+        (click)="onManualCheck()"
+        matTooltip="Refresh connection check"
+      >
+        <mat-icon>sync</mat-icon>
+        <span>Check Link</span>
+      </button>
+
+      <button
+        mat-flat-button
+        color="accent"
+        [disabled]="!agentStatus.connected || !agentStatus.codeGraph.installed || isExecuting"
+        (click)="onRunScript()"
+      >
+        <mat-icon [class.spinning]="isExecuting">play_arrow</mat-icon>
+        <span>{{ isExecuting ? 'Running Script...' : 'Run AST Scan' }}</span>
+      </button>
+    </div>
+  </mat-card-header>
+
+  <mat-card-content>
+    <div class="telemetry-grid">
+      <!-- Connection State & Latency -->
+      <div class="telemetry-block">
+        <span class="block-label">Loopback Channel (IPC)</span>
+        <div class="block-value code-font">
+          <mat-icon class="inline-icon status-dot" [ngClass]="agentStatus.connected ? 'online' : 'offline'">
+            lens
+          </mat-icon>
+          <span>{{ agentStatus.connected ? agentStatus.latencyMs + ' ms' : 'Disconnected' }}</span>
+        </div>
+        <span class="block-subtext">PID: {{ agentStatus.pid || 'Not running' }}</span>
+      </div>
+
+      <!-- CodeGraph Version & Installed State -->
+      <div class="telemetry-block">
+        <span class="block-label">CodeGraph Binary</span>
+        <div class="block-value">
+          <mat-icon class="inline-icon" [ngClass]="agentStatus.codeGraph.installed ? 'installed' : 'missing'">
+            {{ agentStatus.codeGraph.installed ? 'check_circle' : 'cancel' }}
+          </mat-icon>
+          <span *ngIf="agentStatus.codeGraph.installed" class="code-font highlight-cyan">
+            {{ agentStatus.codeGraph.version }}
+          </span>
+          <span *ngIf="!agentStatus.codeGraph.installed" class="missing-text">
+            Not Installed
+          </span>
+        </div>
+        <span class="block-subtext code-font" [matTooltip]="agentStatus.codeGraph.binaryPath || ''">
+          {{ agentStatus.codeGraph.binaryPath || 'Path undetected in Windows PATH' }}
+        </span>
+      </div>
+
+      <!-- CLI Worker Pool State -->
+      <div class="telemetry-block">
+        <span class="block-label">Script Engine Status</span>
+        <div class="block-value">
+          <mat-icon class="inline-icon engine-icon">terminal</mat-icon>
+          <span class="engine-state">{{ agentStatus.codeGraph.cliStatus | uppercase }}</span>
+        </div>
+        <span class="block-subtext">Agent Version: {{ agentStatus.agentVersion }}</span>
+      </div>
+    </div>
+
+    <!-- Error Notice when Windows software is closed -->
+    <div *ngIf="!agentStatus.connected" class="disconnect-notice">
+      <mat-icon>warning</mat-icon>
+      <div>
+        <strong>Windows Bridge Agent is offline:</strong> Start the installed software on your machine (or run <code>CodeGraph.BridgeDaemon.exe</code>). The web application cannot trigger scripts or read local versions without this service running.
+      </div>
+    </div>
+  </mat-card-content>
+</mat-card>

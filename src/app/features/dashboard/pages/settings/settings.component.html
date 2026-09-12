@@ -1,0 +1,98 @@
+<form [formGroup]="settingsForm" (ngSubmit)="onSave()" class="settings-form">
+  
+  <div class="settings-header">
+    <div>
+      <h2>System & Workspace Settings</h2>
+      <p class="subtitle">Configure parsing thresholds, telemetry polling, and indexer engine bounds.</p>
+    </div>
+    <div class="actions">
+      <button mat-button type="button" (click)="onResetDefaults()">Reset Defaults</button>
+      <button mat-flat-button color="primary" type="submit">Save Changes</button>
+    </div>
+  </div>
+
+  <div class="settings-sections">
+    <!-- Section 1: Ingestion & Engine Configuration -->
+    <mat-card class="settings-card mat-elevation-z1" appearance="outlined">
+      <mat-card-header>
+        <mat-icon mat-card-avatar color="primary">tune</mat-icon>
+        <mat-card-title>AST Graph Indexing Rules</mat-card-title>
+        <mat-card-subtitle>Direct how the compiler parser traverses dependency trees</mat-card-subtitle>
+      </mat-card-header>
+
+      <mat-card-content class="form-content">
+        <div class="toggle-row">
+          <div class="toggle-copy">
+            <span class="title">Live Incremental Indexing</span>
+            <span class="desc">Continuously reparse modified nodes on file watcher triggers.</span>
+          </div>
+          <mat-slide-toggle color="primary" formControlName="enableLiveIndexing"></mat-slide-toggle>
+        </div>
+
+        <mat-divider></mat-divider>
+
+        <div class="toggle-row">
+          <div class="toggle-copy">
+            <span class="title">Strict Circular Dependency Guard</span>
+            <span class="desc">Fail build scans immediately upon detecting recursive imports.</span>
+          </div>
+          <mat-slide-toggle color="accent" formControlName="strictCircularDetection"></mat-slide-toggle>
+        </div>
+
+        <mat-divider></mat-divider>
+
+        <div class="toggle-row">
+          <div class="toggle-copy">
+            <span class="title">Include Spec & Mock Definitions</span>
+            <span class="desc">Traverse *.spec.ts and mock files during symbol extraction.</span>
+          </div>
+          <mat-slide-toggle color="primary" formControlName="parseTestFiles"></mat-slide-toggle>
+        </div>
+
+        <mat-divider></mat-divider>
+
+        <div class="field-row">
+          <div class="field-copy">
+            <span class="title">Maximum Node Traversal Depth</span>
+            <span class="desc">Restricts how deeply recursive trees will branch during visualization.</span>
+          </div>
+          <mat-form-field appearance="outline" class="inline-field">
+            <mat-label>Depth Limit</mat-label>
+            <input matInput type="number" formControlName="maxNodeDepth" min="1" max="20">
+          </mat-form-field>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- Section 2: Worker Limits & Resource Budgets -->
+    <mat-card class="settings-card mat-elevation-z1" appearance="outlined">
+      <mat-card-header>
+        <mat-icon mat-card-avatar color="accent">memory</mat-icon>
+        <mat-card-title>Worker Pools & Performance</mat-card-title>
+        <mat-card-subtitle>Tune concurrency limits and cache thresholds</mat-card-subtitle>
+      </mat-card-header>
+
+      <mat-card-content class="form-content">
+        <div class="inputs-grid">
+          <mat-form-field appearance="outline">
+            <mat-label>Thread Worker Pool Size</mat-label>
+            <input matInput type="number" formControlName="workerPoolSize" min="1" max="16">
+            <mat-hint>Parallel threads for AST compilation</mat-hint>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Max Memory Budget (MB)</mat-label>
+            <input matInput type="number" formControlName="memoryLimitMb" min="512" step="256">
+            <mat-hint>Worker processes restart if exceeded</mat-hint>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Telemetry Refresh (Seconds)</mat-label>
+            <input matInput type="number" formControlName="telemetryRefreshSec" min="5" max="60">
+            <mat-hint>Polling frequency for dashboard stats</mat-hint>
+          </mat-form-field>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</form>
