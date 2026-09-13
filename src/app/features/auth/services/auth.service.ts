@@ -19,12 +19,14 @@ export class AuthService {
   currentUser$ = this.currentUserSubject.asObservable();
 
   login(credentials: any): Observable<any> {
-    return this.http
-      .post(`${this.apiUrl}/login`, credentials, { withCredentials: true })
-      .pipe(
-        tap(() => this.checkSession().subscribe()), // Refresh user profile on login
-      );
-  }
+  return this.http.post(
+    `${this.apiUrl}/login`,
+    credentials,
+    {
+      withCredentials: true
+    }
+  );
+}
 
   /**
    * Uses the refresh token cookie to create a new authenticated session.
@@ -80,4 +82,10 @@ export class AuthService {
         tap(() => this.checkSession().subscribe()), // Hydrates currentUserSubject with the new session
       );
   }
+
+
+
+clearUser(): void {
+  this.currentUserSubject.next(null);
+}
 }

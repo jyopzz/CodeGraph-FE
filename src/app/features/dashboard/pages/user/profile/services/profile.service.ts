@@ -17,7 +17,6 @@ export interface ProfileDetails {
 export class ProfileService {
   private http = inject(HttpClient);
 
-  // Plural 'profiles' matching @RequestMapping("/api/profiles")
   private apiUrl = `${environment.apiUrl}/profiles`;
 
   getProfile(): Observable<any> {

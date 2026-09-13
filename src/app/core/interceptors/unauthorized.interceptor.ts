@@ -6,11 +6,16 @@ import { AuthService } from '../../features/auth/services/auth.service';
 
 let refreshRequest$: Observable<any> | null = null;
 
-export const unauthorizedInterceptor: HttpInterceptorFn = (req, next) => {
+export const unauthorizedInterceptor: HttpInterceptorFn = (
+  req,
+  next
+) => {
+
   const router = inject(Router);
   const authService = inject(AuthService);
 
   return next(req).pipe(
+
     catchError((error: HttpErrorResponse) => {
       if (error.status !== 401) {
         return throwError(() => error);
