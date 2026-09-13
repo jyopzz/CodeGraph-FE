@@ -26,6 +26,16 @@ export class AuthService {
       );
   }
 
+  /**
+   * Uses the refresh token cookie to create a new authenticated session.
+   * The backend is expected to rotate/set the authentication cookie here.
+   */
+  refreshToken(): Observable<any> {
+    return this.http.post(`${this.apiUrl}/refresh`, {}, {
+      withCredentials: true,
+    });
+  }
+
   checkSession(): Observable<any> {
     return this.http
       .get<any>(`${this.apiUrl}/me`, { withCredentials: true })
