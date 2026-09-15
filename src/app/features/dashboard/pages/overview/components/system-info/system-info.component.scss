@@ -198,4 +198,18 @@
     from { transform: rotate(0deg); }
     to { transform: rotate(360deg); }
   }
+
+  .agent-info {
+  margin-top: 1rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  font-size: 0.75rem;
+  opacity: 0.65;
+
+  strong {
+    font-weight: 600;
+    opacity: 1;
+  }
+}
 }

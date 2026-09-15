@@ -21,6 +21,7 @@ import { NavbarComponent } from './core/components/navbar/navbar.component';
 import { routes } from './app.routes';
 import { credentialsInterceptor } from './core/interceptors/credentials.interceptor';
 import { unauthorizedInterceptor } from './core/interceptors/unauthorized.interceptor';
+import { agentInterceptor } from './core/interceptors/agent.interceptor';
 
 @NgModule({
   declarations: [
@@ -47,7 +48,9 @@ import { unauthorizedInterceptor } from './core/interceptors/unauthorized.interc
     provideHttpClient(
       withInterceptors([
         credentialsInterceptor, 
-        unauthorizedInterceptor
+        agentInterceptor,
+        unauthorizedInterceptor,
+        
       ])
     )
   ],

@@ -1,23 +1,33 @@
 import { HttpErrorResponse, HttpInterceptorFn } from '@angular/common/http';
 import { inject } from '@angular/core';
 import { Router } from '@angular/router';
-import { Observable, catchError, finalize, shareReplay, switchMap, throwError } from 'rxjs';
+import {
+  Observable,
+  catchError,
+  finalize,
+  shareReplay,
+  switchMap,
+  throwError,
+} from 'rxjs';
 import { AuthService } from '../../features/auth/services/auth.service';
+import { environment } from '../../../environments/environment';
 
 let refreshRequest$: Observable<any> | null = null;
 
-export const unauthorizedInterceptor: HttpInterceptorFn = (
-  req,
-  next
-) => {
-
+export const unauthorizedInterceptor: HttpInterceptorFn = (req, next) => {
   const router = inject(Router);
   const authService = inject(AuthService);
 
   return next(req).pipe(
-
     catchError((error: HttpErrorResponse) => {
       if (error.status !== 401) {
+        return throwError(() => error);
+      }
+
+      // Agent authentication is handled separately.
+      // Never attempt the backend refresh-token flow
+      // for CodeGraph Agent requests.
+      if (req.url.startsWith(environment.agentUrl)) {
         return throwError(() => error);
       }
 
@@ -36,7 +46,7 @@ export const unauthorizedInterceptor: HttpInterceptorFn = (
           shareReplay(1),
           finalize(() => {
             refreshRequest$ = null;
-          })
+          }),
         );
       }
 
@@ -51,8 +61,8 @@ export const unauthorizedInterceptor: HttpInterceptorFn = (
           localStorage.removeItem('is_authenticated');
           router.navigate(['/login']);
           return throwError(() => refreshError);
-        })
+        }),
       );
-    })
+    }),
   );
 };
