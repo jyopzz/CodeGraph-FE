@@ -5,7 +5,7 @@
   </button>
 
   <button
-    *ngIf="(currentUser$ | async) && (isDashboardRoute$ | async)"
+    *ngIf="isDashboardRoute$ | async"
     mat-icon-button
     aria-label="Toggle workspace sidebar"
     matTooltip="Toggle workspace sidebar"

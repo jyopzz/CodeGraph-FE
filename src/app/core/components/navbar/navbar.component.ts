@@ -1,6 +1,6 @@
 import { Component, EventEmitter, HostBinding, Input, Output, inject } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
-import { filter, map } from 'rxjs/operators';
+import { filter, map, startWith } from 'rxjs/operators';
 import { BaseComponent } from '../../base/base.component';
 import { ThemeService, ThemePreference } from '../../services/theme.service';
 import { DashboardUiService } from '../../../features/dashboard/services/dashboard-ui.service';
@@ -44,7 +44,8 @@ export class NavbarComponent extends BaseComponent {
 
   isDashboardRoute$ = this.router.events.pipe(
     filter((event): event is NavigationEnd => event instanceof NavigationEnd),
-    map(event => event.urlAfterRedirects.startsWith('/dashboard'))
+    map(event => event.urlAfterRedirects.startsWith('/dashboard')),
+    startWith(this.router.url.startsWith('/dashboard'))
   );
 
   /** Selects explicit preference from a MatMenu ('system' | 'light' | 'dark') */
