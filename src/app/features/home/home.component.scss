@@ -1,4 +1,16 @@
 :host(.app-home-container) {
   display: block;
-  margin: 2rem auto;
+  max-width: 1200px;
+  margin: 32px auto;
+  padding: 0 24px;
+
+  mat-card {
+    color: var(--cg-text-primary);
+    background: var(--cg-surface);
+  }
+
+  mat-card-subtitle,
+  mat-card-content {
+    color: var(--cg-text-secondary);
+  }
 }

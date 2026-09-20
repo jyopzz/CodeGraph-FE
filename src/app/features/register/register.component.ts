@@ -42,7 +42,7 @@ export const passwordMatchValidator: ValidatorFn = (control: AbstractControl): V
   standalone: false
 })
 export class RegisterComponent extends BaseComponent implements OnInit {
-  override hostClass = 'app-dashboard-container';
+  override hostClass = 'app-register-container';
 
   @ViewChildren('otpInput') otpInputs!: QueryList<ElementRef<HTMLInputElement>>;
 

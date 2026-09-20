@@ -9,18 +9,25 @@ import { MatIconModule } from '@angular/material/icon';
   imports: [RouterLink, MatButtonModule, MatIconModule],
   template: `
     <div class="not-found-container">
-      <div class="card-glow"></div>
+
       <div class="content">
         <mat-icon class="warning-icon">sentiment_dissatisfied</mat-icon>
+
         <h1 class="gradient-text">404</h1>
+
         <h2>Lost in the void?</h2>
-        <p>The page you're searching for vanished into thin air or never existed at all.</p>
-        
+
+        <p>
+          The page you're searching for vanished into thin air or never
+          existed at all.
+        </p>
+
         <div class="action-buttons">
           <a mat-flat-button class="btn-primary" routerLink="/">
             <mat-icon>home</mat-icon>
             Back to Home
           </a>
+
           <a mat-stroked-button class="btn-secondary" routerLink="/dashboard">
             <mat-icon>dashboard</mat-icon>
             Dashboard
@@ -31,10 +38,9 @@ import { MatIconModule } from '@angular/material/icon';
   `,
   styles: [`
     :host {
-      --cyan-accent: #00b4d8;
-      --orange-accent: #ff6b35;
-      --text-main: #1e293b;
-      --text-muted: #64748b;
+      display: block;
+      width: 100%;
+      height: 100%;
     }
 
     .not-found-container {
@@ -43,99 +49,127 @@ import { MatIconModule } from '@angular/material/icon';
       align-items: center;
       justify-content: center;
       min-height: 80vh;
-      text-align: center;
-      padding: 2rem;
+      padding: 24px;
       overflow: hidden;
-    }
-
-    .card-glow {
-      position: absolute;
-      width: 320px;
-      height: 320px;
-      filter: blur(60px);
-      z-index: 0;
-      pointer-events: none;
+      background: var(--cg-background);
+      color: var(--cg-text-primary);
+      text-align: center;
     }
 
     .content {
       position: relative;
       z-index: 1;
-      max-width: 460px;
       display: flex;
       flex-direction: column;
       align-items: center;
+      max-width: 460px;
     }
 
     .warning-icon {
-      font-size: 48px;
       width: 48px;
       height: 48px;
-      color: var(--orange-accent);
-      margin-bottom: 0.5rem;
+      margin-bottom: 8px;
+      color: var(--cg-accent);
+      font-size: 48px;
     }
 
     .gradient-text {
-      font-size: 7rem;
+      margin: 0;
+      background: linear-gradient(
+        135deg,
+        var(--cg-primary) 25%,
+        var(--cg-accent) 85%
+      );
+      background-clip: text;
+      color: transparent;
+      font-size: 112px;
       font-weight: 900;
       line-height: 1;
-      margin: 0;
       letter-spacing: -2px;
-      background: linear-gradient(135deg, var(--cyan-accent) 25%, var(--orange-accent) 85%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
     }
 
     h2 {
-      font-size: 1.75rem;
+      margin: 16px 0 8px;
+      color: var(--cg-text-primary);
+      font-size: 28px;
       font-weight: 700;
-      color: var(--text-main);
-      margin: 1rem 0 0.5rem;
     }
 
     p {
-      font-size: 1rem;
-      color: var(--text-muted);
+      margin: 0 0 32px;
+      color: var(--cg-text-secondary);
+      font-size: 16px;
       line-height: 1.6;
-      margin: 0 0 2rem;
     }
 
     .action-buttons {
       display: flex;
-      gap: 1rem;
-      flex-wrap: wrap;
       justify-content: center;
+      flex-wrap: wrap;
+      gap: 16px;
     }
 
-    .btn-primary {
-      background-color: var(--cyan-accent) !important;
-      color: #ffffff !important;
-      font-weight: 600;
-      border-radius: 9999px !important;
-      padding: 0.5rem 1.5rem !important;
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
-    }
+    .btn-primary,
+.btn-secondary {
+  border-radius: 9999px !important;
+  padding: 8px 24px !important;
+  font-weight: 600;
+}
 
-    .btn-primary:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 16px rgba(0, 180, 216, 0.3);
-    }
+.btn-primary {
+  background: var(--cg-primary) !important;
 
-    .btn-secondary {
-      color: var(--orange-accent) !important;
-      border-color: var(--orange-accent) !important;
-      font-weight: 600;
-      border-radius: 9999px !important;
-      padding: 0.5rem 1.5rem !important;
-      transition: background-color 0.2s ease;
-    }
+  .mdc-button__label,
+  mat-icon {
+    color: #fff !important;
+  }
 
-    .btn-secondary:hover {
-      background-color: rgba(255, 107, 53, 0.05) !important;
-    }
+  &:hover {
+    background: var(--cg-primary-hover) !important;
+  }
+}
+
+.btn-secondary {
+  border-color: var(--cg-accent) !important;
+
+  .mdc-button__label,
+  mat-icon {
+    color: var(--cg-accent) !important;
+  }
+
+  &:hover {
+    background: var(--cg-accent-light) !important;
+  }
+}
 
     mat-icon {
       margin-right: 4px;
       vertical-align: middle;
+    }
+
+    @media (max-width: 600px) {
+      .not-found-container {
+        padding: 16px;
+      }
+
+      .gradient-text {
+        font-size: 80px;
+      }
+
+      h2 {
+        font-size: 24px;
+      }
+
+      .action-buttons {
+        flex-direction: column;
+        width: 100%;
+
+        a {
+          width: 100%;
+        }
+      }
     }
   `]
 })

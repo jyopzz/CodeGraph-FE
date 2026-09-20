@@ -1,68 +1,74 @@
 :host(.app-root-container) {
   display: flex;
   flex-direction: column;
-  height: 100vh;
   width: 100%;
+  height: 100vh;
   overflow: hidden;
 
   .sidenav-container {
     flex: 1;
-    height: 100%;
     width: 100%;
+    height: 100%;
   }
 
   .mobile-drawer {
     width: 260px;
     box-shadow: 2px 0 12px rgba(0, 0, 0, 0.2);
+    background: var(--cg-background);
+  }
 
-    .active-mobile-link {
-      background-color: rgba(0, 188, 212, 0.12);
-      font-weight: 600;
-    }
+  .active-mobile-link {
+    background-color: var(--cg-primary-light);
+    color: var(--cg-primary);
+    font-weight: 600;
   }
 
   .sidenav-content {
     display: flex;
     flex-direction: column;
     height: 100%;
-    min-height: 0; // Boundary constraint
+    min-height: 0;
     overflow-y: auto;
 
     &:has(.app-dashboard-container) {
-      overflow: hidden; // Keep shell locked when dashboard is active
+      overflow: hidden;
     }
   }
 
   .page-viewport {
-    flex: 1;
     display: flex;
+    flex: 1;
     flex-direction: column;
-    min-height: 0; // Required for nested scrolling
+    min-height: 0;
     overflow: hidden;
+    background: var(--cg-background);
+    color: var(--cg-text-primary);
   }
 
   .content-wrapper {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
     width: 100%;
     height: 100%;
-    margin: 0 auto;
+    min-height: 0;
     box-sizing: border-box;
-    display: flex;
-    flex-direction: column;
-    flex: 1;
-    min-height: 0; // Breaks intrinsic height chain
 
     &:has(.app-dashboard-container) {
       padding: 0;
-      overflow: hidden; // Contain dashboard view
+      overflow: hidden;
     }
 
     &:not(:has(.app-dashboard-container)) {
-      padding: 1.5rem;
-      overflow-y: auto; // Fallback scroll for regular pages (e.g., Home)
+      overflow-y: auto;
 
       @media (max-width: 599px) {
-        padding: 1rem 0.75rem;
+        padding: 16px 12px;
       }
     }
+  }
+
+  .app-title {
+    margin-left: 8px;
   }
 }

@@ -1,52 +1,54 @@
+:host {
+  display: block;
+}
+
 .pairing-content {
-  min-width: 360px;
-  max-width: 420px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 1rem;
-  padding: 0.5rem 0 1rem;
+  gap: 16px;
+  min-width: 360px;
+  max-width: 420px;
+  padding: 8px 0 16px;
 }
 
 .pairing-icon {
   width: 48px;
   height: 48px;
+  color: var(--cg-primary);
   font-size: 48px;
-  opacity: 0.8;
 }
 
 .description {
   margin: 0;
-  text-align: center;
-  font-size: 0.9rem;
+  color: var(--cg-text-secondary);
+  font-size: 14px;
   line-height: 1.5;
-  opacity: 0.75;
+  text-align: center;
 }
 
 .pairing-field {
   width: 100%;
 
   input {
-    text-align: center;
     font-family: "JetBrains Mono", "Fira Code", monospace;
-    font-size: 1.5rem;
+    font-size: 24px;
     font-weight: 600;
-    letter-spacing: 0.4rem;
+    letter-spacing: 6px;
+    text-align: center;
   }
 }
 
 .error-message {
-  width: 100%;
   display: flex;
   align-items: flex-start;
-  gap: 0.5rem;
-  padding: 0.75rem;
+  gap: 8px;
+  width: 100%;
+  padding: 12px;
   border-radius: 6px;
-
-  background: rgba(244, 67, 54, 0.1);
-  color: #f44336;
-
-  font-size: 0.8rem;
+  background: var(--cg-error-light);
+  color: var(--cg-error);
+  font-size: 12px;
 
   mat-icon {
     flex-shrink: 0;
@@ -56,12 +58,18 @@
 .pairing-progress {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
-
-  font-size: 0.8rem;
-  opacity: 0.75;
+  gap: 12px;
+  color: var(--cg-text-secondary);
+  font-size: 12px;
 }
 
 mat-dialog-actions {
-  padding-bottom: 1rem;
+  padding-bottom: 16px;
+}
+
+@media (max-width: 480px) {
+  .pairing-content {
+    min-width: 0;
+    width: 100%;
+  }
 }

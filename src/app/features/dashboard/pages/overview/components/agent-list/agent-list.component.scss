@@ -6,103 +6,65 @@
     display: flex;
     flex-direction: column;
     height: 100%;
+    background: var(--cg-surface);
+    color: var(--cg-text-primary);
   }
 
   .table-responsive {
-    overflow-x: auto;
     margin-top: 12px;
+    overflow-x: auto;
   }
 
   .agent-table {
     width: 100%;
     border-collapse: collapse;
-    text-align: left;
     font-size: 14px;
+    text-align: left;
 
     th,
     td {
       padding: 10px 12px;
-      border-bottom: 1px solid rgba(128, 128, 128, 0.18);
+      border-bottom: 1px solid var(--cg-border);
       white-space: nowrap;
     }
 
     th {
+      color: var(--cg-text-secondary);
       font-weight: 600;
-      opacity: 0.7;
     }
 
     tbody tr {
       transition: background-color 0.15s ease;
 
       &:hover {
-        background-color: rgba(128, 128, 128, 0.05);
+        background: var(--cg-hover);
       }
     }
 
     .agent-name {
       font-weight: 600;
     }
+  }
 
-    .code-font {
-      font-family: "JetBrains Mono", "Fira Code", monospace;
-      font-size: 12px;
-    }
-
-    .status-badge {
-      display: inline-block;
-      padding: 3px 8px;
-      border-radius: 12px;
-      font-size: 12px;
-      font-weight: 600;
-
-      &.active,
-      &.online,
-      &.connected,
-      &.healthy {
-        background-color: rgba(76, 175, 80, 0.15);
-        color: #4caf50;
-      }
-
-      &.inactive,
-      &.offline,
-      &.disconnected {
-        background-color: rgba(244, 67, 54, 0.15);
-        color: #f44336;
-      }
-
-      &.connecting,
-      &.pending,
-      &.syncing {
-        background-color: rgba(0, 188, 212, 0.15);
-        color: #00bcd4;
-      }
-
-      &.degraded,
-      &.warning {
-        background-color: rgba(255, 152, 0, 0.15);
-        color: #ff9800;
-      }
-
-      &.unknown {
-        background-color: rgba(128, 128, 128, 0.15);
-        color: #888;
-      }
-    }
+  .code-font {
+    font-family: "JetBrains Mono", "Fira Code", monospace;
+    font-size: 12px;
   }
 
   .loading-state,
   .error-state,
   .empty-state {
-    min-height: 140px;
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 8px;
-    opacity: 0.7;
+    min-height: 140px;
+    color: var(--cg-text-secondary);
   }
 
   .loading-state {
     mat-icon {
+      color: var(--cg-primary);
       animation: agent-spin 1.2s linear infinite;
     }
   }
@@ -111,13 +73,13 @@
     flex-wrap: wrap;
 
     mat-icon {
-      color: #f44336;
+      color: var(--cg-error);
     }
   }
 
   .empty-state {
     mat-icon {
-      opacity: 0.6;
+      color: var(--cg-text-muted);
     }
   }
 }

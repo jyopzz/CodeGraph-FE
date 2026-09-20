@@ -1,339 +1,262 @@
-:host {
+:host(.app-navbar-container) {
   display: block;
   position: sticky;
   top: 0;
   z-index: 1000;
-}
 
-.navbar {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  padding: 0 1rem;
-}
-
-.brand-link,
-.nav-links {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-.spacer {
-  flex: 1 1 auto;
-}
-
-.active-nav {
-  background-color: rgba(255, 255, 255, 0.15);
-}
-
-.theme-segmented-group.mat-button-toggle-group {
-  display: inline-flex;
-  align-items: center;
-  height: 32px;
-  border-radius: 9999px;
-  padding: 2px;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  background: rgba(255, 255, 255, 0.12);
-  backdrop-filter: blur(8px);
-  gap: 2px;
-
-  // 1. Kill MDC default borders, backgrounds, and focus artifacts
-  border-style: solid; // resets MDC multi-border nonsense
-
-  .mat-button-toggle {
-    border: none !important;
-    background: transparent !important;
-    border-radius: 9999px;
-    height: 28px;
-    width: 28px;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    transition:
-      background-color 0.2s ease,
-      transform 0.15s ease;
-
-    // Remove MDC default surface & ripple box shapes
-    ::ng-deep {
-      .mat-button-toggle-label-content {
-        padding: 0 !important;
-        line-height: 1 !important;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: 100%;
-        height: 100%;
-      }
-
-      .mat-button-toggle-focus-overlay,
-      .mat-ripple,
-      .mdc-button__ripple {
-        display: none !important;
-      }
-    }
-
-    mat-icon {
-      font-size: 16px;
-      width: 16px;
-      height: 16px;
-      line-height: 16px;
-      color: rgba(255, 255, 255, 0.7);
-      transition: color 0.2s ease;
-    }
-
-    &:hover mat-icon {
-      color: #ffffff;
-    }
-
-    // 2. Clean, proportional active state
-    &.mat-button-toggle-checked {
-      background: rgba(255, 255, 255, 0.28) !important;
-      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
-
-      mat-icon {
-        color: #ffffff;
-      }
-    }
-  }
-}
-
-// --- Profile Pill ---
-.profile-pill {
-  border-radius: 9999px !important;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  background: rgba(255, 255, 255, 0.1);
-  padding: 0 10px 0 6px !important;
-  height: 36px;
-
-  .profile-email {
-    max-width: 140px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    font-size: 0.85rem;
-    margin: 0 4px;
-  }
-
-  &[aria-expanded="true"] .chevron {
-    transform: rotate(180deg);
-  }
-  .chevron {
-    order: 3;
-  }
-}
-
-.avatar-badge {
-  width: 26px;
-  height: 26px;
-  border-radius: 50%;
-  background: linear-gradient(135deg, #0390cb, #9393a3);
-  color: #ffffff;
-  font-size: 0.75rem;
-  font-weight: 700;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-  line-height: 1;
-
-  &.lg {
-    width: 36px;
-    height: 36px;
-    font-size: 0.95rem;
-  }
-}
-
-// --- Dropdown Menu Panel ---
-// --- Dropdown User Account Menu ---
-::ng-deep .user-account-menu {
-  border-radius: 12px !important;
-
-  .menu-header {
+  .navbar {
     display: flex;
     align-items: center;
     gap: 12px;
-    padding: 12px 16px;
+    padding: 0 16px;
+  }
+
+  .brand-link,
+  .nav-links {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .spacer {
+    flex: 1;
+  }
+
+  .active-nav {
+    background: rgba(255, 255, 255, 0.15);
+  }
+
+  .theme-segmented-group {
+    display: inline-flex;
+    align-items: center;
+    flex-shrink: 0;
+    height: 32px;
+    padding: 2px;
+    box-sizing: border-box;
+    border: 1px solid var(--cg-border);
+    border-radius: 9999px;
+    background: var(--cg-surface);
+
+    .mat-button-toggle {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 28px;
+      height: 28px;
+      min-width: 28px;
+      padding: 0;
+      border: 0 !important;
+      border-radius: 50%;
+      background: transparent !important;
+      box-sizing: border-box;
+
+      ::ng-deep .mat-button-toggle-label-content {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 28px;
+        height: 28px;
+        padding: 0 !important;
+        line-height: normal;
+        box-sizing: border-box;
+      }
+
+      mat-icon {
+        width: 16px;
+        height: 16px;
+        margin: 0;
+        color: var(--cg-text-secondary) !important;
+        font-size: 16px;
+      }
+
+      &:hover {
+        background: var(--cg-hover) !important;
+
+        mat-icon {
+          color: var(--cg-primary) !important;
+        }
+      }
+
+      &.mat-button-toggle-checked {
+        background: var(--cg-primary-light) !important;
+
+        mat-icon {
+          color: var(--cg-primary) !important;
+        }
+      }
+    }
+  }
+
+  @media (max-width: 600px) {
+    .theme-segmented-group {
+      width: 96px;
+
+      .mat-button-toggle {
+        flex: 1;
+        width: auto;
+        min-width: 0;
+
+        ::ng-deep .mat-button-toggle-label-content {
+          width: 100%;
+        }
+      }
+    }
+  }
+
+  .profile-pill {
+    height: 36px;
+    padding: 0 10px 0 6px !important;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 9999px !important;
+    background: rgba(255, 255, 255, 0.1);
+
+    .profile-email {
+      max-width: 140px;
+      margin: 0 4px;
+      overflow: hidden;
+      font-size: 13px;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    &[aria-expanded="true"] .chevron {
+      transform: rotate(180deg);
+    }
+  }
+
+  .avatar-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    background: var(--cg-primary);
+    color: #fff;
+    font-size: 12px;
+    font-weight: 700;
+
+    &.lg {
+      width: 36px;
+      height: 36px;
+      font-size: 15px;
+    }
+  }
+}
+
+::ng-deep {
+  .user-account-menu,
+  .notification-menu {
+    border-radius: 12px !important;
+  }
+
+  .user-account-menu {
+    .menu-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 16px;
+    }
 
     .user-meta {
       display: flex;
       flex-direction: column;
+      min-width: 0;
+    }
+
+    .user-meta small {
+      color: var(--cg-text-muted);
+      font-size: 11px;
+    }
+
+    .user-email-text {
       overflow: hidden;
+      color: var(--cg-text-primary);
+      font-size: 13px;
+      font-weight: 600;
+      text-overflow: ellipsis;
+    }
 
-      small {
-        opacity: 0.6;
-        font-size: 0.7rem;
-        font-weight: 600;
-      }
-      span {
-        font-size: 0.85rem;
-        font-weight: 600;
-        text-overflow: ellipsis;
-        overflow: hidden;
-      }
+    .logout-btn {
+      color: var(--cg-error) !important;
     }
   }
 
-  .logout-btn {
-    color: var(--mat-sys-error, #e11d48) !important;
-    .mat-icon {
-      color: inherit;
+  .notification-menu {
+    width: 380px !important;
+    max-width: 95vw !important;
+    padding: 0 !important;
+
+    .notification-header,
+    .notification-footer {
+      padding: 10px 16px;
     }
-  }
-}
 
-// ==========================================
-// Base Layout & Light Theme (Default)
-// ==========================================
-::ng-deep .notification-menu.mat-mdc-menu-panel {
-  width: 380px !important;
-  max-width: 95vw !important;
-  border-radius: 12px !important;
-  padding: 0 !important;
-
-  .notification-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 10px 16px;
+    .notification-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
 
     .header-title {
+      color: var(--cg-text-primary);
       font-size: 15px;
       font-weight: 600;
-      color: rgba(0, 0, 0, 0.87);
     }
 
-    .mark-read-btn {
-      font-size: 12px;
-      height: 28px;
-      padding: 0 8px;
+    .notification-content {
+      max-height: 340px;
+      overflow-y: auto;
     }
-  }
-
-  .notification-content {
-    max-height: 340px;
-    overflow-y: auto;
 
     .notification-item {
       display: flex;
-      align-items: flex-start;
       gap: 12px;
       padding: 12px 16px;
       cursor: pointer;
-      transition: background-color 0.15s ease;
 
       &:hover {
-        background-color: rgba(0, 0, 0, 0.04);
+        background: var(--cg-hover);
       }
 
       &.unread {
-        background-color: rgba(0, 151, 167, 0.08); // Primary Cyan 700 tint
+        background: var(--cg-primary-light);
       }
+    }
 
-      .item-icon {
-        flex-shrink: 0;
-        margin-top: 2px;
-        font-size: 20px;
-        width: 20px;
-        height: 20px;
-      }
+    .item-body {
+      flex: 1;
+      min-width: 0;
+    }
 
-      .item-body {
-        flex: 1 1 auto;
-        min-width: 0;
+    .item-title {
+      color: var(--cg-text-primary);
+      font-size: 14px;
+      font-weight: 600;
+    }
 
-        .item-title {
-          font-size: 14px;
-          font-weight: 600;
-          line-height: 1.3;
-          margin-bottom: 2px;
-          color: rgba(0, 0, 0, 0.87);
-        }
+    .item-desc {
+      color: var(--cg-text-secondary);
+      font-size: 12px;
+    }
 
-        .item-desc {
-          font-size: 12px;
-          line-height: 1.35;
-          color: rgba(0, 0, 0, 0.6);
-          word-break: break-word;
-        }
-      }
+    .item-time,
+    .empty-state {
+      color: var(--cg-text-muted);
+    }
 
-      .item-time {
-        flex-shrink: 0;
-        font-size: 11px;
-        color: rgba(0, 0, 0, 0.38);
-        white-space: nowrap;
-        margin-top: 2px;
-      }
+    .item-time {
+      font-size: 11px;
+      white-space: nowrap;
     }
 
     .empty-state {
       padding: 32px 16px;
       text-align: center;
-      color: rgba(0, 0, 0, 0.38);
-
-      mat-icon {
-        font-size: 36px;
-        height: 36px;
-        width: 36px;
-      }
-
-      p {
-        margin: 8px 0 0;
-        font-size: 13px;
-      }
     }
-  }
-
-  .notification-footer {
-    padding: 6px 8px;
 
     .view-all-btn {
       width: 100%;
-      text-align: center;
-      font-size: 13px;
-      font-weight: 600;
-    }
-  }
-}
-
-// ==========================================
-// Dark Theme Overrides (.dark-theme on Overlay)
-// ==========================================
-::ng-deep .dark-theme .notification-menu.mat-mdc-menu-panel {
-  .notification-header {
-    .header-title {
-      color: rgba(255, 255, 255, 0.95);
-    }
-  }
-
-  .notification-content {
-    .notification-item {
-      &:hover {
-        background-color: rgba(255, 255, 255, 0.05);
-      }
-
-      &.unread {
-        background-color: rgba(0, 188, 212, 0.16); // Cyan Dark tint
-      }
-
-      .item-body {
-        .item-title {
-          color: rgba(255, 255, 255, 0.95);
-        }
-
-        .item-desc {
-          color: rgba(255, 255, 255, 0.65);
-        }
-      }
-
-      .item-time {
-        color: rgba(255, 255, 255, 0.4);
-      }
-    }
-
-    .empty-state {
-      color: rgba(255, 255, 255, 0.4);
     }
   }
 }

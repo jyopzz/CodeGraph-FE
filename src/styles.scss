@@ -1,46 +1,26 @@
-@use '@angular/material' as mat;
+@use './app/core/styles/theme';
 
-@include mat.core();
-
-// 1. Shared Palettes (Cyan primary, Orange accent)
-$codegraph-primary: mat.m2-define-palette(mat.$m2-cyan-palette, 700, 500, 900);
-$codegraph-accent: mat.m2-define-palette(mat.$m2-orange-palette, A200, A100, A400);
-$codegraph-warn: mat.m2-define-palette(mat.$m2-red-palette);
-
-// 2. Light Theme Configuration
-$codegraph-light-theme: mat.m2-define-light-theme((
-  color: (
-    primary: $codegraph-primary,
-    accent: $codegraph-accent,
-    warn: $codegraph-warn,
-  ),
-  typography: mat.m2-define-typography-config(),
-  density: 0
-));
-
-// 3. Dark Theme Configuration
-$codegraph-dark-theme: mat.m2-define-dark-theme((
-  color: (
-    primary: $codegraph-primary,
-    accent: $codegraph-accent,
-    warn: $codegraph-warn,
-  ),
-  typography: mat.m2-define-typography-config(),
-  density: 0
-));
-
-// 4. Emit Default (Light) Theme
-@include mat.all-component-themes($codegraph-light-theme);
-
-// 5. Emit Dark Theme under .dark-theme class
-.dark-theme {
-  @include mat.all-component-colors($codegraph-dark-theme);
-}
-
-// Global Viewport Resets
-html, body {
+html,
+body {
   height: 100%;
   margin: 0;
+}
+
+body {
+  background-color: var(--cg-background);
+  color: var(--cg-text-primary);
   font-family: Roboto, "Helvetica Neue", sans-serif;
-  transition: background-color 0.3s ease, color 0.3s ease;
+
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+.mat-app-background {
+  background-color: var(--cg-background);
+  color: var(--cg-text-primary);
 }

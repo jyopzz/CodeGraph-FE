@@ -12,7 +12,7 @@ import { AuthService } from './services/auth.service';
   standalone: false
 })
 export class LoginComponent extends BaseComponent {
-  override hostClass = 'app-dashboard-container';
+  override hostClass = 'app-login-container';
 
   private fb = inject(NonNullableFormBuilder);
   private router = inject(Router);

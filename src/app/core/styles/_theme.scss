@@ -1,0 +1,62 @@
+@use '@angular/material' as mat;
+@use './variables';
+@use './light-theme';
+@use './dark-theme';
+
+// Angular Material core styles.
+// This should be included only once in the application.
+@include mat.core();
+
+// ---------------------------------------------------------
+// Light theme
+// ---------------------------------------------------------
+
+@include mat.all-component-themes(
+  light-theme.$codegraph-light-theme
+);
+
+// ---------------------------------------------------------
+// Dark theme
+// ---------------------------------------------------------
+
+.dark-theme {
+  @include mat.all-component-colors(
+    dark-theme.$codegraph-dark-theme
+  );
+}
+
+// ---------------------------------------------------------
+// Application CSS variables
+// ---------------------------------------------------------
+
+:root {
+  @include variables.light-theme-variables;
+}
+
+.dark-theme {
+  @include variables.dark-theme-variables;
+}
+
+// ---------------------------------------------------------
+// Global theme transition
+// ---------------------------------------------------------
+
+html,
+body,
+button,
+input,
+textarea,
+select,
+.mat-mdc-card,
+.mat-mdc-menu-panel,
+.mat-mdc-dialog-container,
+.mat-mdc-select-panel,
+.mat-mdc-option,
+.mat-mdc-form-field,
+.mat-mdc-table,
+.mat-toolbar {
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease,
+    border-color 0.2s ease;
+}
