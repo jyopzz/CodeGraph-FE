@@ -20,12 +20,14 @@ import { SettingsComponent } from './pages/settings/settings.component';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { SystemInfoModule } from './pages/overview/components/system-info/system-info.module';
+import { AgentListComponent } from './pages/overview/components/agent-list/agent-list.component';
 
 @NgModule({
   declarations: [
     DashboardComponent,
     OverviewComponent,
     SettingsComponent,
+    AgentListComponent,
   ],
   imports: [
     CommonModule,

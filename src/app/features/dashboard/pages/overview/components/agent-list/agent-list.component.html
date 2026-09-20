@@ -1,0 +1,100 @@
+<mat-card
+  class="section-card mat-elevation-z1"
+  appearance="outlined"
+>
+  <mat-card-header>
+    <mat-card-title>Agents</mat-card-title>
+
+    <mat-card-subtitle>
+      Registered CodeGraph agents
+    </mat-card-subtitle>
+  </mat-card-header>
+
+  <mat-card-content>
+    <div
+      *ngIf="isLoading"
+      class="loading-state"
+    >
+      <mat-icon>sync</mat-icon>
+
+      <span>Loading agents...</span>
+    </div>
+
+    <div
+      *ngIf="hasError && !isLoading"
+      class="error-state"
+    >
+      <mat-icon>error_outline</mat-icon>
+
+      <span>
+        Unable to load agent configurations.
+      </span>
+
+      <button
+        mat-stroked-button
+        color="primary"
+        type="button"
+        (click)="loadAgents()"
+      >
+        Retry
+      </button>
+    </div>
+
+    <div
+      *ngIf="!isLoading && !hasError && agents.length === 0"
+      class="empty-state"
+    >
+      <mat-icon>devices</mat-icon>
+
+      <span>
+        No agents are currently registered.
+      </span>
+    </div>
+
+    <div
+      *ngIf="!isLoading && agents.length > 0"
+      class="table-responsive"
+    >
+      <table class="agent-table">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Host</th>
+            <th>Protocol</th>
+            <th>Port</th>
+            <th>Created At</th>
+            <th>Updated At</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr *ngFor="let agent of agents">
+            <td class="agent-name">
+              {{ agent.name || '-' }}
+            </td>
+
+            <td class="code-font">
+              {{ agent.host || '-' }}
+            </td>
+
+            <td>
+              {{ agent.protocol || '-' }}
+            </td>
+
+            <td class="code-font">
+              {{ agent.port ?? '-' }}
+            </td>
+
+            <td>
+              {{ agent.createdAt || '-' }}
+            </td>
+
+            <td>
+              {{ agent.updatedAt || '-' }}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </mat-card-content>
+</mat-card>

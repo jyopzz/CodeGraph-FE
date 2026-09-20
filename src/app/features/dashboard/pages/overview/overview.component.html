@@ -100,38 +100,7 @@
   <!-- 4. Split Cluster Health & Activity Log -->
   <section class="dashboard-split-view">
     <!-- Active Clusters Table -->
-    <mat-card class="section-card mat-elevation-z1" appearance="outlined">
-      <mat-card-header>
-        <mat-card-title>Cluster Partition Status</mat-card-title>
-        <mat-card-subtitle>Live telemetry across AST processing worker pools</mat-card-subtitle>
-      </mat-card-header>
-      <mat-card-content>
-        <div class="table-responsive">
-          <table class="status-table">
-            <thead>
-              <tr>
-                <th>Cluster Partition</th>
-                <th>Nodes</th>
-                <th>Status</th>
-                <th>Latency</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr *ngFor="let c of clusters">
-                <td class="code-font">{{ c.cluster }}</td>
-                <td>{{ c.nodesCount | number }}</td>
-                <td>
-                  <span class="status-badge" [ngClass]="c.status.toLowerCase()">
-                    {{ c.status }}
-                  </span>
-                </td>
-                <td class="code-font">{{ c.latency }}</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </mat-card-content>
-    </mat-card>
+    <app-agent-list></app-agent-list>
 
     <!-- Recent System Activity -->
     <mat-card class="section-card mat-elevation-z1" appearance="outlined">
