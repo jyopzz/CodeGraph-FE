@@ -96,7 +96,12 @@
         </thead>
 
         <tbody>
-          <tr *ngFor="let agent of agents">
+          <tr
+            *ngFor="let agent of agents"
+            class="agent-row"
+            [class.selected-agent-row]="isSelectedAgent(agent)"
+            (click)="onAgentSelect(agent)"
+          >
             <td class="agent-Id">
               {{ agent.agentId || "-" }}
             </td>
@@ -138,7 +143,6 @@
       </table>
       <mat-menu #agentMenu="matMenu" xPosition="before">
         <ng-template matMenuContent let-agent="agent">
-
           <button mat-menu-item type="button" (click)="onDeleteAgent(agent)">
             <mat-icon>delete</mat-icon>
             <span>Delete</span>

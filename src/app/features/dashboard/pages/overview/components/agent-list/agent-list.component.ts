@@ -2,7 +2,9 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
+  EventEmitter,
   OnInit,
+  Output,
 } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { debounceTime, distinctUntilChanged, takeUntil, tap } from 'rxjs';
@@ -27,10 +29,13 @@ export class AgentListComponent extends BaseComponent implements OnInit {
   override hostClass = 'app-agent-list-container';
 
   agents: AgentConfiguration[] = [];
+  selectedAgentId: string | null = null;
 
   isLoading = false;
   isLoadingSearch= false;
   hasError = false;
+
+  @Output() agentSelected = new EventEmitter<AgentConfiguration | null>();
 
   searchControl = new FormControl<string>('', {
     nonNullable: true,
@@ -101,6 +106,14 @@ export class AgentListComponent extends BaseComponent implements OnInit {
           this.agents = response.data ?? [];
           this.totalElements = response.metaData?.totalElements ?? 0;
 
+          if (this.agents.length > 0) {
+            this.selectedAgentId = this.agents[0].agentId ?? null;
+            this.onAgentSelect(this.agents[0]);
+          } else {
+            this.selectedAgentId = null;
+            this.onAgentSelect(null);
+          }
+
           this.isLoading = false;
           this.isLoadingSearch=false;
           this.cdr.markForCheck();
@@ -127,6 +140,14 @@ export class AgentListComponent extends BaseComponent implements OnInit {
     this.loadAgents();
   }
 
+  onAgentSelect(agent: AgentConfiguration | null): void {
+    this.selectedAgentId = agent?.agentId ?? null;
+    this.agentSelected.emit(agent);
+  }
+
+  isSelectedAgent(agent: AgentConfiguration): boolean {
+    return this.selectedAgentId !== null && this.selectedAgentId === agent.agentId;
+  }
   onSortChange(sort: Sort): void {
     if (!sort.direction) {
       this.sortBy = 'name';

@@ -25,6 +25,7 @@ import { SystemInfoModule } from './pages/overview/components/system-info/system
 import { AgentListComponent } from './pages/overview/components/agent-list/agent-list.component';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatMenuModule } from '@angular/material/menu';
+import { AgentDetailsComponent } from './pages/overview/components/agent-details/agent-details.component';
 
 @NgModule({
   declarations: [
@@ -32,6 +33,7 @@ import { MatMenuModule } from '@angular/material/menu';
     OverviewComponent,
     SettingsComponent,
     AgentListComponent,
+    AgentDetailsComponent,
   ],
   imports: [
     CommonModule,

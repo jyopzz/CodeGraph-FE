@@ -15,7 +15,9 @@
           [color]="action.color || 'primary'"
           (click)="onQuickAction(action.id)"
         >
-          <mat-icon class="material-symbols-outlined">{{ action.icon }}</mat-icon>
+          <mat-icon class="material-symbols-outlined">{{
+            action.icon
+          }}</mat-icon>
           <span>{{ action.label }}</span>
         </button>
 
@@ -26,7 +28,9 @@
           [color]="action.color"
           (click)="onQuickAction(action.id)"
         >
-          <mat-icon class="material-symbols-outlined">{{ action.icon }}</mat-icon>
+          <mat-icon class="material-symbols-outlined">{{
+            action.icon
+          }}</mat-icon>
           <span>{{ action.label }}</span>
         </button>
 
@@ -39,7 +43,9 @@
           [attr.aria-label]="action.label"
           (click)="onQuickAction(action.id)"
         >
-          <mat-icon class="material-symbols-outlined">{{ action.icon }}</mat-icon>
+          <mat-icon class="material-symbols-outlined">{{
+            action.icon
+          }}</mat-icon>
         </button>
       </ng-container>
     </div>
@@ -53,7 +59,12 @@
         <span class="title-text">Pinned Favorites</span>
         <span class="badge">{{ favorites.length }}</span>
       </div>
-      <button mat-button color="primary" class="manage-btn" (click)="onManageFavorites()">
+      <button
+        mat-button
+        color="primary"
+        class="manage-btn"
+        (click)="onManageFavorites()"
+      >
         <mat-icon>settings</mat-icon>
         <span>Manage</span>
       </button>
@@ -90,7 +101,10 @@
     <ng-template #noFavorites>
       <div class="empty-favorites mat-elevation-z1">
         <mat-icon class="empty-icon">star_outline</mat-icon>
-        <span class="empty-text">No favorites pinned yet. Click the star icon on any cluster or resource to pin it here.</span>
+        <span class="empty-text"
+          >No favorites pinned yet. Click the star icon on any cluster or
+          resource to pin it here.</span
+        >
       </div>
     </ng-template>
   </section>
@@ -98,37 +112,13 @@
   <app-system-info></app-system-info>
 
   <!-- 4. Split Cluster Health & Activity Log -->
-  <section class="dashboard-split-view">
-    <!-- Active Clusters Table -->
-    <app-agent-list></app-agent-list>
 
-    <!-- Recent System Activity -->
-    <mat-card class="section-card mat-elevation-z1" appearance="outlined">
-      <mat-card-header>
-        <mat-card-title>System Operations Log</mat-card-title>
-        <mat-card-subtitle>Recent automated parser and indexing tasks</mat-card-subtitle>
-      </mat-card-header>
-      <mat-card-content>
-        <mat-list>
-          <mat-list-item *ngFor="let event of recentEvents; let last = last">
-            <mat-icon matListItemIcon [ngClass]="event.severity">
-              {{
-                event.severity === "success"
-                  ? "check_circle"
-                  : event.severity === "warn"
-                    ? "warning"
-                    : "info"
-              }}
-            </mat-icon>
-            <div matListItemTitle class="event-title">{{ event.action }}</div>
-            <div matListItemLine class="event-meta">
-              <span class="target">{{ event.target }}</span> &bull;
-              <span class="time">{{ event.timestamp }}</span>
-            </div>
-            <mat-divider *ngIf="!last"></mat-divider>
-          </mat-list-item>
-        </mat-list>
-      </mat-card-content>
-    </mat-card>
-  </section>
+
+    <section class="dashboard-split-view">
+      <app-agent-list
+        (agentSelected)="onAgentSelected($event)"
+      ></app-agent-list>
+
+      <app-agent-details [agent]="selectedAgent"></app-agent-details>
+    </section>
 </div>

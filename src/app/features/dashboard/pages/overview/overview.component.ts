@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { BaseComponent } from '../../../../core/base/base.component';
+import { AgentConfiguration } from './components/agent-list/service/agent-list.service';
 
 export interface FavoriteItem {
   id: string;
@@ -52,6 +53,12 @@ export class OverviewComponent extends BaseComponent {
 
   constructor(private router: Router) {
     super();
+  }
+
+  selectedAgent: AgentConfiguration | null = null;
+
+  onAgentSelected(agent: AgentConfiguration | null): void {
+    this.selectedAgent = agent;
   }
 
   // Pinned Favorites State
