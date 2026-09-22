@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
 
@@ -14,8 +14,16 @@ export interface AgentConfiguration {
   updatedAt?: string | null;
 }
 
+export interface AgentConfigurationMetaData {
+  page: number;
+  size: number;
+  totalElements: number;
+  totalPages: number;
+}
+
 export interface AgentConfigurationResponse {
   data: AgentConfiguration[];
+  metaData: AgentConfigurationMetaData;
   message: string;
   businessValidation: unknown;
   successful: boolean;
@@ -30,9 +38,26 @@ export class AgentListService {
 
   private readonly apiUrl = environment.apiUrl;
 
-  getAgentConfigurations(): Observable<AgentConfigurationResponse> {
+  getAgentConfigurations(
+    page: number,
+    size: number,
+    search: string,
+    sortBy: string,
+    sortDirection: 'asc' | 'desc',
+  ): Observable<AgentConfigurationResponse> {
+    let params = new HttpParams()
+      .set('page', page)
+      .set('size', size)
+      .set('sortBy', sortBy)
+      .set('sortDirection', sortDirection);
+
+    if (search) {
+      params = params.set('search', search);
+    }
+
     return this.http.get<AgentConfigurationResponse>(
       `${this.apiUrl}/agent-configurations`,
+      { params },
     );
   }
 }

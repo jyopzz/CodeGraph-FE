@@ -1,34 +1,54 @@
-<mat-card
-  class="section-card mat-elevation-z1"
-  appearance="outlined"
->
+<mat-card class="section-card mat-elevation-z1" appearance="outlined">
   <mat-card-header>
-    <mat-card-title>Agents</mat-card-title>
+    <div class="header-text">
+      <mat-card-title>Agents</mat-card-title>
 
-    <mat-card-subtitle>
-      Registered CodeGraph agents
-    </mat-card-subtitle>
+      <mat-card-subtitle> Registered CodeGraph agents </mat-card-subtitle>
+    </div>
+
+    <div class="toolbar">
+      <mat-form-field appearance="outline" class="search-field">
+        <mat-label>Search agents</mat-label>
+
+        <input
+          matInput
+          type="text"
+          [formControl]="searchControl"
+          placeholder="Search by name, host or protocol"
+        />
+
+        <mat-icon matSuffix [class.search-loading]="isLoadingSearch">
+          {{ isLoadingSearch ? "sync" : "search" }}
+        </mat-icon>
+      </mat-form-field>
+    </div>
   </mat-card-header>
 
   <mat-card-content>
-    <div
-      *ngIf="isLoading"
-      class="loading-state"
-    >
+    <div class="content-actions">
+      <button
+        mat-stroked-button
+        color="primary"
+        type="button"
+        class="refresh-button"
+        [disabled]="isLoading"
+        (click)="refresh()"
+      >
+        <mat-icon>refresh</mat-icon>
+        Refresh
+      </button>
+    </div>
+
+    <div *ngIf="isLoading" class="loading-state">
       <mat-icon>sync</mat-icon>
 
       <span>Loading agents...</span>
     </div>
 
-    <div
-      *ngIf="hasError && !isLoading"
-      class="error-state"
-    >
+    <div *ngIf="hasError && !isLoading" class="error-state">
       <mat-icon>error_outline</mat-icon>
 
-      <span>
-        Unable to load agent configurations.
-      </span>
+      <span> Unable to load agent configurations. </span>
 
       <button
         mat-stroked-button
@@ -46,55 +66,97 @@
     >
       <mat-icon>devices</mat-icon>
 
-      <span>
-        No agents are currently registered.
-      </span>
+      <span> No agents are currently registered. </span>
     </div>
 
-    <div
-      *ngIf="!isLoading && agents.length > 0"
-      class="table-responsive"
-    >
-      <table class="agent-table">
+    <div *ngIf="!isLoading && agents.length > 0" class="table-responsive">
+      <table
+        matSort
+        [matSortActive]="sortBy"
+        [matSortDirection]="sortDirection"
+        (matSortChange)="onSortChange($event)"
+        class="agent-table"
+      >
         <thead>
           <tr>
-            <th>Name</th>
-            <th>Host</th>
-            <th>Protocol</th>
-            <th>Port</th>
-            <th>Created At</th>
-            <th>Updated At</th>
+            <th mat-sort-header="agentId">Agent Id</th>
+            <th mat-sort-header="name">Name</th>
+
+            <th mat-sort-header="host">Host</th>
+
+            <th mat-sort-header="protocol">Protocol</th>
+
+            <th mat-sort-header="port">Port</th>
+
+            <th mat-sort-header="createdAt">Created At</th>
+
+            <th mat-sort-header="updatedAt">Updated At</th>
+            <th class="actions-column">Actions</th>
           </tr>
         </thead>
 
         <tbody>
           <tr *ngFor="let agent of agents">
+            <td class="agent-Id">
+              {{ agent.agentId || "-" }}
+            </td>
             <td class="agent-name">
-              {{ agent.name || '-' }}
+              {{ agent.name || "-" }}
             </td>
 
             <td class="code-font">
-              {{ agent.host || '-' }}
+              {{ agent.host || "-" }}
             </td>
 
             <td>
-              {{ agent.protocol || '-' }}
+              {{ agent.protocol || "-" }}
             </td>
 
             <td class="code-font">
-              {{ agent.port ?? '-' }}
+              {{ agent.port ?? "-" }}
             </td>
 
             <td>
-              {{ agent.createdAt || '-' }}
+              {{ agent.createdAt || "-" }}
             </td>
 
             <td>
-              {{ agent.updatedAt || '-' }}
+              {{ agent.updatedAt || "-" }}
+            </td>
+            <td class="actions-column">
+              <button
+                mat-icon-button
+                [matMenuTriggerFor]="agentMenu"
+                [matMenuTriggerData]="{ agent: agent }"
+                aria-label="Agent actions"
+              >
+                <mat-icon>more_vert</mat-icon>
+              </button>
             </td>
           </tr>
         </tbody>
       </table>
+      <mat-menu #agentMenu="matMenu" xPosition="before">
+        <ng-template matMenuContent let-agent="agent">
+
+          <button mat-menu-item type="button" (click)="onDeleteAgent(agent)">
+            <mat-icon>delete</mat-icon>
+            <span>Delete</span>
+          </button>
+        </ng-template>
+      </mat-menu>
     </div>
+
+    <mat-paginator
+      *ngIf="!hasError"
+      [length]="totalElements"
+      [pageIndex]="pageIndex - 1"
+      [pageSize]="pageSize"
+      [pageSizeOptions]="pageSizeOptions"
+      [disabled]="isLoading"
+      showFirstLastButtons
+      (page)="onPageChange($event)"
+    >
+    </mat-paginator>
   </mat-card-content>
 </mat-card>

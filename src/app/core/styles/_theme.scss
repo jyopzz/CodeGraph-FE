@@ -37,6 +37,11 @@
   @include variables.dark-theme-variables;
 }
 
+.mat-mdc-menu-panel {
+  background-color: var(--cg-surface) !important;
+  color: var(--cg-text-primary);
+}
+
 // ---------------------------------------------------------
 // Global theme transition
 // ---------------------------------------------------------

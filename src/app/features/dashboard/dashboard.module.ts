@@ -12,6 +12,8 @@ import { MatDividerModule } from '@angular/material/divider';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { MatTableModule } from '@angular/material/table';
+import { MatSortModule } from '@angular/material/sort';
 
 import { DashboardRoutingModule } from './dashboard-routing.module';
 import { DashboardComponent } from './dashboard.component';
@@ -21,6 +23,8 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { SystemInfoModule } from './pages/overview/components/system-info/system-info.module';
 import { AgentListComponent } from './pages/overview/components/agent-list/agent-list.component';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatMenuModule } from '@angular/material/menu';
 
 @NgModule({
   declarations: [
@@ -44,7 +48,11 @@ import { AgentListComponent } from './pages/overview/components/agent-list/agent
     MatInputModule,
     MatTooltipModule,
     MatExpansionModule,
-    SystemInfoModule
-  ]
+    SystemInfoModule,
+    MatPaginator,
+    MatTableModule,
+    MatSortModule,
+    MatMenuModule
+]
 })
 export class DashboardModule {}
