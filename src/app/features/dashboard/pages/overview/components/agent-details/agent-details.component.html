@@ -3,11 +3,19 @@
     <div class="header-content">
       <div>
         <mat-card-title>
-          {{ isCreating ? "New Agent" : agent?.name || "Agent Details" }}
+          {{
+            isCreating
+              ? 'New Agent'
+              : agent?.name || 'Agent Details'
+          }}
         </mat-card-title>
 
         <mat-card-subtitle>
-          {{ isCreating ? "Create a new agent" : agent?.agentId || "Select an agent from the table" }}
+          {{
+            isCreating
+              ? 'Create a new agent'
+              : agent?.agentId || 'Select an agent from the table'
+          }}
         </mat-card-subtitle>
       </div>
 
@@ -15,6 +23,7 @@
         mat-icon-button
         type="button"
         aria-label="Add agent"
+        [disabled]="isSaving"
         (click)="startNewAgent()"
       >
         <mat-icon>add</mat-icon>
@@ -23,11 +32,17 @@
   </mat-card-header>
 
   <mat-card-content>
-    <div *ngIf="!hasAgent && !isCreating" class="empty-state">
+    <div
+      *ngIf="!hasAgent && !isCreating"
+      class="empty-state"
+    >
       <mat-icon>touch_app</mat-icon>
 
       <div>
-        <div class="empty-title">No agent selected</div>
+        <div class="empty-title">
+          No agent selected
+        </div>
+
         <div class="empty-text">
           Select an agent from the table to view its configuration.
         </div>
@@ -40,36 +55,145 @@
       [formGroup]="agentForm"
       (ngSubmit)="saveAgent()"
     >
-      <mat-form-field appearance="outline" class="agent-id-field">
-        <mat-label>Agent Id</mat-label>
-        <input matInput formControlName="agentId" [readonly]="!isCreating" />
+      <mat-form-field
+        appearance="outline"
+        class="agent-id-field"
+      >
+        <mat-label>Agent ID</mat-label>
+
+        <input
+          matInput
+          formControlName="agentId"
+          autocomplete="off"
+        />
+
+        <mat-error
+          *ngIf="agentForm.get('agentId')?.hasError('required')"
+        >
+          Agent ID is required
+        </mat-error>
+
+        <mat-error
+          *ngIf="agentForm.get('agentId')?.hasError('pattern')"
+        >
+          Agent ID must start with CG-
+        </mat-error>
       </mat-form-field>
 
       <div class="form-grid">
         <mat-form-field appearance="outline">
           <mat-label>Name</mat-label>
-          <input matInput formControlName="name" />
+
+          <input
+            matInput
+            formControlName="name"
+            autocomplete="off"
+          />
+
+          <mat-error
+            *ngIf="agentForm.get('name')?.hasError('required')"
+          >
+            Name is required
+          </mat-error>
         </mat-form-field>
 
         <mat-form-field appearance="outline">
           <mat-label>Host</mat-label>
-          <input matInput formControlName="host" />
+
+          <input
+            matInput
+            formControlName="host"
+            autocomplete="off"
+          />
+
+          <mat-error
+            *ngIf="agentForm.get('host')?.hasError('required')"
+          >
+            Host is required
+          </mat-error>
         </mat-form-field>
 
         <mat-form-field appearance="outline">
           <mat-label>Protocol</mat-label>
-          <input matInput formControlName="protocol" />
+
+          <mat-select formControlName="protocol">
+            <mat-option value="HTTP">HTTP</mat-option>
+            <mat-option value="HTTPS">HTTPS</mat-option>
+          </mat-select>
+
+          <mat-error
+            *ngIf="agentForm.get('protocol')?.hasError('required')"
+          >
+            Protocol is required
+          </mat-error>
         </mat-form-field>
 
         <mat-form-field appearance="outline">
           <mat-label>Port</mat-label>
-          <input matInput type="number" formControlName="port" />
-        </mat-form-field>
 
+          <input
+            matInput
+            type="number"
+            formControlName="port"
+          />
+
+          <mat-error
+            *ngIf="agentForm.get('port')?.hasError('required')"
+          >
+            Port is required
+          </mat-error>
+
+          <mat-error
+            *ngIf="
+              agentForm.get('port')?.hasError('min') ||
+              agentForm.get('port')?.hasError('max')
+            "
+          >
+            Port must be between 1024 and 65535
+          </mat-error>
+        </mat-form-field>
+      </div>
+
+      <div
+        *ngIf="saveError"
+        class="save-error"
+      >
+        <mat-icon>error_outline</mat-icon>
+        <span>
+          Unable to save agent configuration.
+        </span>
       </div>
 
       <div class="form-actions">
-        <button mat-flat-button color="primary" type="submit" [disabled]="agentForm.pristine">Save</button>
+        <button
+          mat-flat-button
+          color="primary"
+          type="submit"
+          [disabled]="
+            agentForm.invalid ||
+            agentForm.pristine ||
+            isSaving
+          "
+        >
+          <mat-icon *ngIf="!isSaving">
+            save
+          </mat-icon>
+
+          <mat-icon
+            *ngIf="isSaving"
+            class="saving-icon"
+          >
+            sync
+          </mat-icon>
+
+          {{
+            isSaving
+              ? 'Saving...'
+              : isCreating
+                ? 'Create Agent'
+                : 'Update Agent'
+          }}
+        </button>
       </div>
     </form>
   </mat-card-content>

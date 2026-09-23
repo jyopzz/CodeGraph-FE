@@ -36,6 +36,8 @@ export class AgentListComponent extends BaseComponent implements OnInit {
   hasError = false;
 
   @Output() agentSelected = new EventEmitter<AgentConfiguration | null>();
+  @Output() agentsChanged =
+  new EventEmitter<void>();
 
   searchControl = new FormControl<string>('', {
     nonNullable: true,
@@ -145,6 +147,10 @@ export class AgentListComponent extends BaseComponent implements OnInit {
     this.agentSelected.emit(agent);
   }
 
+  clearSelection(): void {
+    this.onAgentSelect(null);
+  }
+
   isSelectedAgent(agent: AgentConfiguration): boolean {
     return this.selectedAgentId !== null && this.selectedAgentId === agent.agentId;
   }
@@ -167,6 +173,43 @@ export class AgentListComponent extends BaseComponent implements OnInit {
   }
 
 onDeleteAgent(agent: AgentConfiguration): void {
-  console.log('Delete agent:', agent);
-}
+    if (!agent.agentId) {
+      return;
+    }
+
+    const confirmed = window.confirm(
+      `Are you sure you want to delete agent "${agent.name || agent.agentId}"?`,
+    );
+
+    if (!confirmed) {
+      return;
+    }
+
+    this.isLoading = true;
+    this.hasError = false;
+    this.cdr.markForCheck();
+
+    this.agentListService
+      .deleteAgent(agent.agentId)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: () => {
+          if (this.selectedAgentId === agent.agentId) {
+            this.selectedAgentId = null;
+            this.agentSelected.emit(null);
+          }
+
+          this.loadAgents();
+        },
+
+        error: (error) => {
+          console.error('Failed to delete agent configuration:', error);
+
+          this.isLoading = false;
+          this.hasError = true;
+
+          this.cdr.markForCheck();
+        },
+      });
+  }
 }

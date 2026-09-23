@@ -116,9 +116,14 @@
 
     <section class="dashboard-split-view">
       <app-agent-list
-        (agentSelected)="onAgentSelected($event)"
-      ></app-agent-list>
+  (agentSelected)="onAgentSelected($event)"
+  #agentList
+></app-agent-list>
 
-      <app-agent-details [agent]="selectedAgent"></app-agent-details>
+      <app-agent-details
+        [agent]="selectedAgent"
+        (agentSaved)="onAgentSaved($event)"
+        (createRequested)="onCreateAgentRequested()"
+      ></app-agent-details>
     </section>
 </div>

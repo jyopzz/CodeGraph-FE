@@ -26,6 +26,7 @@ import { AgentListComponent } from './pages/overview/components/agent-list/agent
 import { MatPaginator } from '@angular/material/paginator';
 import { MatMenuModule } from '@angular/material/menu';
 import { AgentDetailsComponent } from './pages/overview/components/agent-details/agent-details.component';
+import { MatSelectModule } from '@angular/material/select';
 
 @NgModule({
   declarations: [
@@ -54,7 +55,8 @@ import { AgentDetailsComponent } from './pages/overview/components/agent-details
     MatPaginator,
     MatTableModule,
     MatSortModule,
-    MatMenuModule
+    MatMenuModule,
+    MatSelectModule
 ]
 })
 export class DashboardModule {}

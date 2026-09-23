@@ -22,6 +22,15 @@ export interface AgentConfigurationMetaData {
 }
 
 export interface AgentConfigurationResponse {
+  data: AgentConfiguration;
+  metaData?: AgentConfigurationMetaData;
+  message: string;
+  businessValidation: unknown;
+  successful: boolean;
+  responseCode: number;
+}
+
+export interface AgentConfigurationListResponse {
   data: AgentConfiguration[];
   metaData: AgentConfigurationMetaData;
   message: string;
@@ -44,7 +53,7 @@ export class AgentListService {
     search: string,
     sortBy: string,
     sortDirection: 'asc' | 'desc',
-  ): Observable<AgentConfigurationResponse> {
+  ): Observable<AgentConfigurationListResponse> {
     let params = new HttpParams()
       .set('page', page)
       .set('size', size)
@@ -55,9 +64,43 @@ export class AgentListService {
       params = params.set('search', search);
     }
 
-    return this.http.get<AgentConfigurationResponse>(
+    return this.http.get<AgentConfigurationListResponse>(
       `${this.apiUrl}/agent-configurations`,
       { params },
     );
   }
+
+  getAgentConfiguration(
+    agentId: string,
+  ): Observable<AgentConfigurationResponse> {
+    return this.http.get<AgentConfigurationResponse>(
+      `${this.apiUrl}/agent-configurations/${agentId}`,
+    );
+  }
+
+  createAgent(
+    agent: AgentConfiguration,
+  ): Observable<AgentConfigurationResponse> {
+    return this.http.post<AgentConfigurationResponse>(
+      `${this.apiUrl}/agent-configurations`,
+      agent,
+    );
+  }
+
+  updateAgent(
+    agentId: string,
+    agent: AgentConfiguration,
+  ): Observable<AgentConfigurationResponse> {
+    return this.http.patch<AgentConfigurationResponse>(
+      `${this.apiUrl}/agent-configurations/${agentId}`,
+      agent,
+    );
+  }
+
+  deleteAgent(agentId: string): Observable<void> {
+    return this.http.delete<void>(
+      `${this.apiUrl}/agent-configurations/${agentId}`,
+    );
+  }
 }
+
