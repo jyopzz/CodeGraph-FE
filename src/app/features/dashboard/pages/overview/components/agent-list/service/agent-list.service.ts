@@ -1,6 +1,6 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
-import { Observable } from 'rxjs';
+import { map, Observable } from 'rxjs';
 
 import { environment } from '../../../../../../../../environments/environment';
 
@@ -101,6 +101,21 @@ export class AgentListService {
     return this.http.delete<void>(
       `${this.apiUrl}/agent-configurations/${agentId}`,
     );
+  }
+
+  getAgents(): Observable<AgentConfiguration[]> {
+    const params = new HttpParams()
+      .set('page', '0')
+      .set('size', '100');
+
+    return this.http
+      .get<AgentConfigurationListResponse>(
+        `${this.apiUrl}/agent-configurations`,
+        { params },
+      )
+      .pipe(
+        map((response) => response?.data ?? []),
+      );
   }
 }
 

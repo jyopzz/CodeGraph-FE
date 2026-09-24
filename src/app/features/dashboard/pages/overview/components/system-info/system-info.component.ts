@@ -1,9 +1,10 @@
 import {
-  Component,
-  OnInit,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
+  Component,
+  OnInit,
 } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { takeUntil } from 'rxjs';
 
 import { BaseComponent } from '../../../../../../core/base/base.component';
@@ -12,8 +13,12 @@ import {
   AgentTelemetry,
 } from '../../../../../../core/services/agent.service';
 import { AgentAuthService } from '../../../../../../core/services/agent-auth.service';
+
 import { AgentPairingDialogComponent } from './agent-pairing-dialog/agent-pairing-dialog.component';
-import { MatDialog } from '@angular/material/dialog';
+import {
+  AgentConfiguration,
+  AgentListService,
+} from '../agent-list/service/agent-list.service';
 
 @Component({
   selector: 'app-system-info',
@@ -27,6 +32,9 @@ export class SystemInfoComponent extends BaseComponent implements OnInit {
 
   agentStatus: AgentTelemetry | null = null;
 
+  agents: AgentConfiguration[] = [];
+  selectedAgentId: string | null = null;
+
   isExecuting = false;
   isChecking = false;
   isUnpairing = false;
@@ -34,6 +42,7 @@ export class SystemInfoComponent extends BaseComponent implements OnInit {
   constructor(
     private agentService: AgentService,
     private agentAuthService: AgentAuthService,
+    private agentListService: AgentListService,
     private dialog: MatDialog,
     private cdr: ChangeDetectorRef,
   ) {
@@ -43,12 +52,43 @@ export class SystemInfoComponent extends BaseComponent implements OnInit {
   async ngOnInit(): Promise<void> {
     await this.agentAuthService.initialize();
 
+    this.loadAgents();
     this.checkAgent();
   }
 
-  /**
-   * Check whether the Agent is reachable and authenticated.
-   */
+  private loadAgents(): void {
+    this.agentListService
+      .getAgents()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (agents) => {
+          this.agents = agents;
+
+          const selectedAgentExists = this.agents.some(
+            (agent) => agent.agentId === this.selectedAgentId,
+          );
+
+          if (!selectedAgentExists) {
+            this.selectedAgentId = this.agents[0]?.agentId ?? null;
+          }
+
+          this.cdr.markForCheck();
+        },
+        error: (error) => {
+          console.error('Failed to load Agents:', error);
+
+          this.agents = [];
+          this.selectedAgentId = null;
+
+          this.cdr.markForCheck();
+        },
+      });
+  }
+
+  onAgentChange(agentId: string): void {
+    this.selectedAgentId = agentId;
+  }
+
   checkAgent(): void {
     if (this.isChecking) {
       return;
@@ -57,9 +97,6 @@ export class SystemInfoComponent extends BaseComponent implements OnInit {
     this.isChecking = true;
     this.cdr.markForCheck();
 
-    /*
-     * Do not call telemetry until the secure Agent session exists.
-     */
     if (!this.agentAuthService.isAuthenticated()) {
       this.agentStatus = null;
       this.isChecking = false;
@@ -76,7 +113,6 @@ export class SystemInfoComponent extends BaseComponent implements OnInit {
           this.isChecking = false;
           this.cdr.markForCheck();
         },
-
         error: (error) => {
           console.error('CodeGraph Agent health check failed:', error);
 
@@ -93,6 +129,7 @@ export class SystemInfoComponent extends BaseComponent implements OnInit {
 
   onRunScript(): void {
     if (
+      !this.selectedAgentId ||
       !this.agentStatus?.codeGraph.installed ||
       this.isExecuting ||
       !this.agentAuthService.isAuthenticated()
@@ -109,16 +146,18 @@ export class SystemInfoComponent extends BaseComponent implements OnInit {
       .subscribe({
         next: (response) => {
           console.log(
-            'Script execution output from local Agent:',
+            'ATS scan output from local Agent:',
             response.output,
           );
 
           this.isExecuting = false;
           this.cdr.markForCheck();
         },
-
         error: (error) => {
-          console.error('CodeGraph Agent script execution failed:', error);
+          console.error(
+            'CodeGraph Agent ATS scan failed:',
+            error,
+          );
 
           this.isExecuting = false;
           this.cdr.markForCheck();
@@ -138,6 +177,7 @@ export class SystemInfoComponent extends BaseComponent implements OnInit {
       .pipe(takeUntil(this.destroy$))
       .subscribe((paired) => {
         if (paired) {
+          this.loadAgents();
           this.checkAgent();
         }
       });
@@ -163,6 +203,9 @@ export class SystemInfoComponent extends BaseComponent implements OnInit {
       await this.agentAuthService.unpair();
 
       this.agentStatus = null;
+      this.selectedAgentId = null;
+
+      this.loadAgents();
 
       console.log('CodeGraph Agent unpaired successfully');
     } catch (error) {
