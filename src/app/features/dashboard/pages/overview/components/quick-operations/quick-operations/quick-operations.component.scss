@@ -1,0 +1,152 @@
+:host(.app-quick-operations-container) {
+  display: block;
+  width: 100%;
+
+  .quick-operations-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding: 20px;
+    border: 1px solid var(--cg-border);
+    border-radius: 8px;
+    background: var(--cg-surface);
+  }
+
+  .section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+  }
+
+  .section-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--cg-text-primary);
+
+    mat-icon {
+      color: var(--cg-primary);
+    }
+  }
+
+  .operations-list {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .favorite-count {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    min-width: 24px;
+    height: 24px;
+    padding: 0 6px;
+
+    border-radius: 12px;
+    background: var(--cg-primary);
+    color: white;
+
+    font-size: 12px;
+    font-weight: 600;
+  }
+
+  .favorites-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+  }
+
+  .favorite-card {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    min-height: 64px;
+    padding: 12px;
+
+    border: 1px solid var(--cg-border);
+    border-radius: 6px;
+    background: var(--cg-background);
+
+    cursor: pointer;
+    transition: border-color 0.2s ease;
+
+    &:hover {
+      border-color: var(--cg-primary);
+    }
+  }
+
+  .favorite-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 36px;
+    height: 36px;
+
+    border-radius: 6px;
+    background: var(--cg-primary-light);
+
+    mat-icon {
+      color: var(--cg-primary);
+    }
+  }
+
+  .favorite-content {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .favorite-name {
+    overflow: hidden;
+
+    color: var(--cg-text-primary);
+    font-size: 14px;
+    font-weight: 500;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .favorite-type {
+    margin-top: 4px;
+
+    color: var(--cg-text-secondary);
+    font-size: 12px;
+  }
+
+  .favorite-remove {
+    flex-shrink: 0;
+  }
+
+  @media (max-width: 900px) {
+    .section-header {
+      align-items: flex-start;
+      flex-direction: column;
+    }
+
+    .operations-list {
+      width: 100%;
+      flex-wrap: wrap;
+    }
+
+    .favorites-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (max-width: 600px) {
+    .quick-operations-container {
+      padding: 16px;
+    }
+
+    .favorites-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+}

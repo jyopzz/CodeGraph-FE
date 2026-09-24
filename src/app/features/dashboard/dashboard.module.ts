@@ -27,6 +27,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatMenuModule } from '@angular/material/menu';
 import { AgentDetailsComponent } from './pages/overview/components/agent-details/agent-details.component';
 import { MatSelectModule } from '@angular/material/select';
+import { QuickOperationsComponent } from './pages/overview/components/quick-operations/quick-operations/quick-operations.component';
 
 @NgModule({
   declarations: [
@@ -35,6 +36,7 @@ import { MatSelectModule } from '@angular/material/select';
     SettingsComponent,
     AgentListComponent,
     AgentDetailsComponent,
+    QuickOperationsComponent,
   ],
   imports: [
     CommonModule,

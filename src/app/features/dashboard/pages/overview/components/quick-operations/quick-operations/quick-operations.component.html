@@ -1,0 +1,96 @@
+<div class="quick-operations-container">
+
+  <div class="quick-operations-section">
+
+    <div class="section-header">
+      <div class="section-title">
+        <mat-icon>bolt</mat-icon>
+        <span>Quick Operations</span>
+      </div>
+
+      <div class="operations-list">
+        <ng-container *ngFor="let action of quickActions; let first = first">
+
+          <button
+            *ngIf="action.variant === 'flat'"
+            mat-flat-button
+            [color]="action.color"
+            (click)="onQuickAction(action.id)"
+          >
+            <mat-icon>{{ action.icon }}</mat-icon>
+            {{ action.label }}
+          </button>
+
+          <button
+            *ngIf="first"
+            mat-button
+            color="primary"
+            (click)="onManageFavorites()"
+          >
+            <mat-icon>settings</mat-icon>
+            Manage
+          </button>
+
+          <button
+            *ngIf="action.variant === 'stroked'"
+            mat-stroked-button
+            [color]="action.color"
+            (click)="onQuickAction(action.id)"
+          >
+            <mat-icon>{{ action.icon }}</mat-icon>
+            {{ action.label }}
+          </button>
+
+          <button
+            *ngIf="action.variant === 'icon'"
+            mat-icon-button
+            [matTooltip]="action.tooltip || action.label"
+            (click)="onQuickAction(action.id)"
+          >
+            <mat-icon>{{ action.icon }}</mat-icon>
+          </button>
+
+        </ng-container>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="pinned-favorites-section">
+
+    <div class="favorites-grid">
+
+      <div
+        class="favorite-card"
+        *ngFor="let favorite of favorites"
+        (click)="onNavigateFavorite(favorite)"
+      >
+        <div class="favorite-icon">
+          <mat-icon>{{ favorite.icon }}</mat-icon>
+        </div>
+
+        <div class="favorite-content">
+          <div class="favorite-name">
+            {{ favorite.name }}
+          </div>
+
+          <div class="favorite-type">
+            {{ favorite.type | titlecase }}
+          </div>
+        </div>
+
+        <button
+          mat-icon-button
+          class="favorite-remove"
+          matTooltip="Remove favorite"
+          (click)="onToggleFavorite($event, favorite.id)"
+        >
+          <mat-icon>close</mat-icon>
+        </button>
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
