@@ -15,6 +15,7 @@
         <mat-select
           [(value)]="selectedAgentId"
           (selectionChange)="onAgentChange($event.value)"
+          [disabled]="!!agentStatus"
         >
           <mat-option *ngFor="let agent of agents" [value]="agent.agentId">
             {{ agent.name || agent.agentId }} - {{ agent.agentId }}
