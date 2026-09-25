@@ -24,7 +24,7 @@
       </mat-form-field>
 
       <button
-        *ngIf="!isAgentPaired"
+        *ngIf="!agentStatus && !isChecking"
         mat-stroked-button
         color="primary"
         (click)="openPairingDialog()"
@@ -34,7 +34,7 @@
       </button>
 
       <button
-        *ngIf="isAgentPaired"
+        *ngIf="isAgentPaired && agentStatus"
         mat-stroked-button
         color="warn"
         (click)="onUnpair()"

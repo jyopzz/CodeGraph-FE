@@ -14,6 +14,7 @@ import {
 } from '../../../../../../core/services/agent.service';
 import { AgentAuthService } from '../../../../../../core/services/agent-auth.service';
 import { ConfirmDialogComponent } from '../../../../../../core/components/confirm-dialog/confirm-dialog.component';
+import { NotificationService } from '../../../../../../core/services/notifications/notification.service';
 
 import { AgentPairingDialogComponent } from './agent-pairing-dialog/agent-pairing-dialog.component';
 import {
@@ -49,6 +50,7 @@ export class SystemInfoComponent extends BaseComponent implements OnInit {
     private agentService: AgentService,
     private agentAuthService: AgentAuthService,
     private agentListService: AgentListService,
+    private notificationService: NotificationService,
     private dialog: MatDialog,
     private cdr: ChangeDetectorRef,
   ) {
@@ -107,7 +109,7 @@ export class SystemInfoComponent extends BaseComponent implements OnInit {
     }
   }
 
-  checkAgent(): void {
+  checkAgent(notify = false): void {
     if (this.isChecking) {
       return;
     }
@@ -118,6 +120,9 @@ export class SystemInfoComponent extends BaseComponent implements OnInit {
     if (!this.agentAuthService.isAuthenticated()) {
       this.agentStatus = null;
       this.isChecking = false;
+      if (notify) {
+        this.notificationService.warning('Pair the Agent before checking its connection.');
+      }
       this.cdr.markForCheck();
       return;
     }
@@ -129,6 +134,9 @@ export class SystemInfoComponent extends BaseComponent implements OnInit {
         next: (status) => {
           this.agentStatus = status;
           this.isChecking = false;
+          if (notify) {
+            this.notificationService.success('Agent connected.');
+          }
           this.cdr.markForCheck();
         },
         error: (error) => {
@@ -136,13 +144,16 @@ export class SystemInfoComponent extends BaseComponent implements OnInit {
 
           this.agentStatus = null;
           this.isChecking = false;
+          if (notify) {
+            this.notificationService.error('Agent connection check failed. The Agent may be offline.');
+          }
           this.cdr.markForCheck();
         },
       });
   }
 
   onManualCheck(): void {
-    this.checkAgent();
+    this.checkAgent(true);
   }
 
   onRunScript(): void {
@@ -244,9 +255,9 @@ export class SystemInfoComponent extends BaseComponent implements OnInit {
 
       this.loadAgents();
 
-      console.log('CodeGraph Agent unpaired successfully');
+      this.notificationService.success('CodeGraph Agent unpaired successfully.');
     } catch (error) {
-      console.error('CodeGraph Agent unpair failed:', error);
+      this.notificationService.error('Failed to unpair CodeGraph Agent.');
     } finally {
       this.isUnpairing = false;
       this.cdr.markForCheck();
