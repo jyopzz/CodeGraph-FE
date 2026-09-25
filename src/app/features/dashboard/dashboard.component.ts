@@ -50,6 +50,7 @@ export class DashboardComponent extends BaseComponent implements OnInit {
     // Standard items
     { label: 'System Settings', icon: 'tune', route: '/dashboard/settings' },
   ];
+  
 
   ngOnInit(): void {
     this.dashboardUiService.toggleSidebar$

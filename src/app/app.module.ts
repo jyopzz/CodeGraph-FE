@@ -22,11 +22,13 @@ import { routes } from './app.routes';
 import { credentialsInterceptor } from './core/interceptors/credentials.interceptor';
 import { unauthorizedInterceptor } from './core/interceptors/unauthorized.interceptor';
 import { agentInterceptor } from './core/interceptors/agent.interceptor';
+import { NotificationContainerComponent } from './core/services/notifications/notification-container.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     NavbarComponent,
+    NotificationContainerComponent
   ],
   imports: [
     BrowserModule,
@@ -49,7 +51,7 @@ import { agentInterceptor } from './core/interceptors/agent.interceptor';
       withInterceptors([
         credentialsInterceptor, 
         agentInterceptor,
-        unauthorizedInterceptor,
+        unauthorizedInterceptor
         
       ])
     )

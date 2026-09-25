@@ -11,6 +11,7 @@ import {
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 
 import { AgentAuthService } from '../../../../../../../core/services/agent-auth.service';
+import { NotificationService } from '../../../../../../../core/services/notifications/notification.service';
 import { AgentConfiguration } from '../../agent-list/service/agent-list.service';
 
 export interface AgentPairingDialogData {
@@ -25,8 +26,16 @@ export interface AgentPairingDialogData {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AgentPairingDialogComponent {
-  private readonly dialogRef = inject(MatDialogRef<AgentPairingDialogComponent>);
+  private readonly dialogRef = inject(
+    MatDialogRef<AgentPairingDialogComponent>,
+  );
+
   private readonly agentAuthService = inject(AgentAuthService);
+
+  private readonly notificationService = inject(
+    NotificationService,
+  );
+
   private readonly cdr = inject(ChangeDetectorRef);
 
   @ViewChildren('otpInput')
@@ -97,6 +106,7 @@ export class AgentPairingDialogComponent {
         this.focusOtpInput(index - 1);
         this.cdr.markForCheck();
       }
+
       return;
     }
 
@@ -106,7 +116,10 @@ export class AgentPairingDialogComponent {
       return;
     }
 
-    if (event.key === 'ArrowRight' && index < this.otpDigits.length - 1) {
+    if (
+      event.key === 'ArrowRight' &&
+      index < this.otpDigits.length - 1
+    ) {
       event.preventDefault();
       this.focusOtpInput(index + 1);
       return;
@@ -115,9 +128,13 @@ export class AgentPairingDialogComponent {
 
   onOtpPaste(event: ClipboardEvent): void {
     event.preventDefault();
+
     const pasted = event.clipboardData?.getData('text') ?? '';
     const digits = pasted.replace(/\D/g, '');
-    if (!digits) return;
+
+    if (!digits) {
+      return;
+    }
 
     this.fillFromIndex(digits, 0);
   }
@@ -128,16 +145,22 @@ export class AgentPairingDialogComponent {
     }, 0);
   }
 
-  private fillFromIndex(digits: string, startIndex: number): void {
+  private fillFromIndex(
+    digits: string,
+    startIndex: number,
+  ): void {
     const chars = digits.split('');
     let cur = startIndex;
 
     while (cur < 6 && chars.length > 0) {
       this.otpDigits[cur] = chars.shift()!;
+
       const el = this.otpInputs?.get(cur)?.nativeElement;
+
       if (el) {
         el.value = this.otpDigits[cur];
       }
+
       cur++;
     }
 
@@ -155,6 +178,7 @@ export class AgentPairingDialogComponent {
   private focusOtpInput(index: number): void {
     requestAnimationFrame(() => {
       const target = this.otpInputs?.get(index)?.nativeElement;
+
       if (target) {
         target.focus();
         target.select();
@@ -163,7 +187,10 @@ export class AgentPairingDialogComponent {
   }
 
   async pair(): Promise<void> {
-    if (this.pairingCode.length !== 6 || this.isPairing) {
+    if (
+      this.pairingCode.length !== 6 ||
+      this.isPairing
+    ) {
       return;
     }
 
@@ -173,18 +200,32 @@ export class AgentPairingDialogComponent {
 
     try {
       await this.agentAuthService.connect(this.pairingCode);
+
+      this.notificationService.success(
+        'Agent connected successfully.',
+      );
+
       this.dialogRef.close(true);
     } catch (error: any) {
       console.error('Agent pairing failed:', error);
 
-      this.errorMessage =
+      this.isPairing = false;
+
+      const message =
         error?.error?.error ||
         error?.error?.message ||
         'Pairing failed. Please check the code and try again.';
 
+      // Show global top-right notification
+      this.notificationService.error(message);
+
+      // Keep the inline dialog error as well
+      this.errorMessage = message;
+
       // Reset digits so user can re-enter immediately
       this.otpDigits = ['', '', '', '', '', ''];
-      this.cdr.markForCheck();
+
+      this.cdr.detectChanges();
       this.focusOtpInput(0);
     } finally {
       this.isPairing = false;

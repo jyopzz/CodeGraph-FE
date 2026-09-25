@@ -1,0 +1,35 @@
+<div class="notification-container" aria-live="polite" aria-atomic="false">
+	<div
+		*ngFor="let notification of notifications$ | async; trackBy: trackById"
+		class="notification"
+		[ngClass]="'notification-' + notification.type"
+		role="status"
+	>
+		<div class="notification-icon" aria-hidden="true">
+			<mat-icon>{{
+				notification.type === 'error'
+					? 'error_outline'
+					: notification.type === 'success'
+						? 'check_circle'
+						: notification.type === 'warning'
+							? 'warning'
+							: 'info'
+			}}</mat-icon>
+		</div>
+
+		<div class="notification-content">
+			<div class="notification-title">{{ notification.type | titlecase }}</div>
+			<div class="notification-message">{{ notification.message }}</div>
+		</div>
+
+		<button
+			mat-icon-button
+			type="button"
+			class="notification-close"
+			[attr.aria-label]="'Dismiss ' + notification.type + ' notification'"
+			(click)="close(notification.id)"
+		>
+			<mat-icon>close</mat-icon>
+		</button>
+	</div>
+</div>
