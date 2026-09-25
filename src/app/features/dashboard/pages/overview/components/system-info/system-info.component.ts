@@ -39,6 +39,10 @@ export class SystemInfoComponent extends BaseComponent implements OnInit {
   isChecking = false;
   isUnpairing = false;
 
+  get isAgentPaired(): boolean {
+    return this.agentAuthService.isAuthenticated();
+  }
+
   constructor(
     private agentService: AgentService,
     private agentAuthService: AgentAuthService,
@@ -145,19 +149,13 @@ export class SystemInfoComponent extends BaseComponent implements OnInit {
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (response) => {
-          console.log(
-            'ATS scan output from local Agent:',
-            response.output,
-          );
+          console.log('ATS scan output from local Agent:', response.output);
 
           this.isExecuting = false;
           this.cdr.markForCheck();
         },
         error: (error) => {
-          console.error(
-            'CodeGraph Agent ATS scan failed:',
-            error,
-          );
+          console.error('CodeGraph Agent ATS scan failed:', error);
 
           this.isExecuting = false;
           this.cdr.markForCheck();
@@ -166,10 +164,17 @@ export class SystemInfoComponent extends BaseComponent implements OnInit {
   }
 
   openPairingDialog(): void {
+    const selectedAgent =
+      this.agents.find((agent) => agent.agentId === this.selectedAgentId) ??
+      null;
+
     const dialogRef = this.dialog.open(AgentPairingDialogComponent, {
       width: '460px',
       maxWidth: 'calc(100vw - 32px)',
       disableClose: true,
+      data: {
+        agent: selectedAgent,
+      },
     });
 
     dialogRef

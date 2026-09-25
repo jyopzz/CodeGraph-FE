@@ -1,100 +1,96 @@
-<h2 mat-dialog-title>
-  Connect to CodeGraph Agent
-</h2>
-
-<mat-dialog-content>
-
-  <div class="pairing-content">
-
-    <mat-icon class="pairing-icon">
-      security
-    </mat-icon>
-
-    <p class="description">
-      Enter the 6-digit pairing code displayed by the
-      CodeGraph Agent running on your Windows machine.
-    </p>
-
-    <mat-form-field
-      appearance="outline"
-      class="pairing-field"
-    >
-      <mat-label>Pairing Code</mat-label>
-
-      <input
-        matInput
-        type="text"
-        inputmode="numeric"
-        autocomplete="one-time-code"
-        maxlength="6"
-        placeholder="123456"
-        [value]="pairingCode"
-        (input)="onCodeInput($event)"
-        (keyup.enter)="pair()"
-        [disabled]="isPairing"
-      />
-
-      <mat-hint>
-        Enter the 6-digit code shown by the Agent
-      </mat-hint>
-    </mat-form-field>
-
-    <div
-      *ngIf="errorMessage"
-      class="error-message"
-    >
-      <mat-icon>error</mat-icon>
-
-      <span>
-        {{ errorMessage }}
-      </span>
+<div class="dialog-header">
+  <div class="dialog-title">
+    <div class="dialog-title-icon">
+      <mat-icon>link</mat-icon>
     </div>
 
-    <div
-      *ngIf="isPairing"
-      class="pairing-progress"
-    >
-      <mat-spinner diameter="24"></mat-spinner>
-
-      <span>
-        Establishing secure connection...
-      </span>
+    <div>
+      <h2>Pair CodeGraph Agent</h2>
+      <span>Securely connect your selected agent</span>
     </div>
-
   </div>
 
-</mat-dialog-content>
-
-<mat-dialog-actions align="end">
-
   <button
-    mat-button
+    mat-icon-button
     type="button"
+    aria-label="Close"
     (click)="cancel()"
     [disabled]="isPairing"
   >
-    Cancel
+    <mat-icon>close</mat-icon>
   </button>
+</div>
 
-  <button
-    mat-flat-button
-    color="primary"
-    type="button"
-    (click)="pair()"
-    [disabled]="pairingCode.length !== 6 || isPairing"
-  >
-    <mat-spinner
-      *ngIf="isPairing"
-      diameter="18"
-    ></mat-spinner>
+<mat-dialog-content>
+  <div class="pairing-content">
 
-    <span *ngIf="!isPairing">
-      Connect
-    </span>
+    <!-- Selected Agent -->
+    <div class="selected-agent">
+      <div class="agent-icon">
+        <mat-icon>computer</mat-icon>
+      </div>
 
-    <span *ngIf="isPairing">
-      Pairing...
-    </span>
-  </button>
+      <div class="agent-details">
+        <span class="agent-label">Agent selected for pairing</span>
+        <span class="agent-name">{{ selectedAgent?.name || 'CodeGraph Agent' }}</span>
+        <span class="agent-id">{{ selectedAgent?.agentId || 'No agent selected' }}</span>
+      </div>
 
-</mat-dialog-actions>
+      <mat-icon class="agent-check">check_circle</mat-icon>
+    </div>
+
+    <!-- OTP Section -->
+    <div class="otp-section">
+      <div class="otp-header">
+        <div class="otp-icon">
+          <mat-icon>password</mat-icon>
+        </div>
+
+        <div>
+          <h3>Enter pairing code</h3>
+          <p>Enter the 6-digit code displayed in your CodeGraph Agent.</p>
+        </div>
+      </div>
+
+      <div class="otp-input-section">
+        <div class="otp-container">
+          <input
+            *ngFor="let digit of otpDigits; let i = index; trackBy: trackByIndex"
+            #otpInput
+            class="otp-box"
+            type="text"
+            inputmode="numeric"
+            pattern="[0-9]*"
+            autocomplete="one-time-code"
+            [value]="digit"
+            [disabled]="isPairing"
+            [attr.aria-label]="'OTP digit ' + (i + 1)"
+            (focus)="onOtpFocus(i)"
+            (input)="onOtpInput($event, i)"
+            (keydown)="onOtpKeyDown($event, i)"
+            (paste)="onOtpPaste($event)"
+          />
+        </div>
+
+        <!-- Inline Progress Indicator -->
+        <div *ngIf="isPairing" class="pairing-progress">
+          <mat-spinner diameter="18"></mat-spinner>
+          <span>Connecting to agent...</span>
+        </div>
+
+        <!-- Helper hint when not pairing and no error -->
+        <div *ngIf="!isPairing && !errorMessage" class="otp-helper">
+          <mat-icon>info_outline</mat-icon>
+          <span>Agent pairs automatically once all 6 digits are entered</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Error Message -->
+    <div *ngIf="errorMessage" class="error-message">
+      <mat-icon>error_outline</mat-icon>
+      <span>{{ errorMessage }}</span>
+    </div>
+
+  </div>
+</mat-dialog-content>

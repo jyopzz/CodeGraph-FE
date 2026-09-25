@@ -16,9 +16,25 @@
         </mat-select>
       </mat-form-field>
 
-      <button mat-stroked-button color="primary" (click)="openPairingDialog()">
+      <button
+        *ngIf="!isAgentPaired"
+        mat-stroked-button
+        color="primary"
+        (click)="openPairingDialog()"
+      >
         <mat-icon>link</mat-icon>
         Pair Agent
+      </button>
+
+      <button
+        *ngIf="isAgentPaired"
+        mat-stroked-button
+        color="warn"
+        (click)="onUnpair()"
+        [disabled]="isUnpairing"
+      >
+        <mat-icon>link_off</mat-icon>
+        {{ isUnpairing ? "Unpairing..." : "Unpair" }}
       </button>
 
       <button
@@ -29,16 +45,6 @@
       >
         <mat-icon [class.spinning]="isChecking">sync</mat-icon>
         {{ isChecking ? "Checking..." : "Check Connection" }}
-      </button>
-
-      <button
-        mat-stroked-button
-        color="warn"
-        (click)="onUnpair()"
-        [disabled]="isUnpairing"
-      >
-        <mat-icon>link_off</mat-icon>
-        {{ isUnpairing ? "Unpairing..." : "Unpair" }}
       </button>
 
       <button
