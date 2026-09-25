@@ -199,7 +199,9 @@ export class AgentPairingDialogComponent {
     this.cdr.markForCheck();
 
     try {
-      await this.agentAuthService.connect(this.pairingCode);
+      // Pass applicationCode from selectedAgent (e.g. this.selectedAgent?.applicationCode or id)
+      const appCode = this.selectedAgent?.agentId ?? '';
+      await this.agentAuthService.connect(this.pairingCode, appCode);
 
       this.notificationService.success(
         'Agent connected successfully.',

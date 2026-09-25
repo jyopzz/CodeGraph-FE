@@ -1,6 +1,12 @@
 <mat-card class="system-info-card" appearance="outlined">
   <mat-card-header class="system-info-header">
-    <mat-card-title>System Info</mat-card-title>
+    <mat-card-title>
+      System Info
+      <mat-icon *ngIf="agentStatus; else disconnectedIcon" class="material-symbols-outlined status-icon" matTooltip="Agent connected">android_cell_5_bar</mat-icon>
+      <ng-template #disconnectedIcon>
+        <mat-icon class="material-symbols-outlined status-icon" matTooltip="Agent disconnected">android_cell_5_bar_off</mat-icon>
+      </ng-template>
+    </mat-card-title>
 
     <div class="header-actions">
       <mat-form-field appearance="outline" class="agent-select">

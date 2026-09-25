@@ -71,20 +71,6 @@ export class AgentAuthService {
     );
   }
 
-  async pair(code: string): Promise<PairResponse> {
-    if (!this.keyService.hasKeyPair()) {
-      await this.keyService.generateKeyPair();
-    }
-
-    const publicKey = await this.keyService.getPublicKeyJwk();
-
-    return firstValueFrom(
-      this.http.post<PairResponse>(`${this.apiUrl}/pair`, {
-        code,
-        publicKey: JSON.stringify(publicKey),
-      }),
-    );
-  }
 
   async verify(
     challengeId: string,
@@ -104,8 +90,26 @@ export class AgentAuthService {
     return response;
   }
 
-  async connect(code: string): Promise<VerifyResponse> {
-    const pairResponse = await this.pair(code);
+  // agent-auth.service.ts
+
+  async pair(code: string, applicationCode?: string): Promise<PairResponse> {
+    if (!this.keyService.hasKeyPair()) {
+      await this.keyService.generateKeyPair();
+    }
+
+    const publicKey = await this.keyService.getPublicKeyJwk();
+
+    return firstValueFrom(
+      this.http.post<PairResponse>(`${this.apiUrl}/pair`, {
+        code,
+        applicationCode: applicationCode ?? '',
+        publicKey: JSON.stringify(publicKey),
+      }),
+    );
+  }
+
+  async connect(code: string, applicationCode?: string): Promise<VerifyResponse> {
+    const pairResponse = await this.pair(code, applicationCode);
 
     return this.verify(pairResponse.challengeId, pairResponse.challenge);
   }

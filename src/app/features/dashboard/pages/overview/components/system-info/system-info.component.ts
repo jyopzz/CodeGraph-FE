@@ -13,6 +13,7 @@ import {
   AgentTelemetry,
 } from '../../../../../../core/services/agent.service';
 import { AgentAuthService } from '../../../../../../core/services/agent-auth.service';
+import { ConfirmDialogComponent } from '../../../../../../core/components/confirm-dialog/confirm-dialog.component';
 
 import { AgentPairingDialogComponent } from './agent-pairing-dialog/agent-pairing-dialog.component';
 import {
@@ -29,6 +30,7 @@ import {
 })
 export class SystemInfoComponent extends BaseComponent implements OnInit {
   override hostClass = 'app-system-info-container';
+  private readonly selectedAgentStorageKey = 'codgraph.selectedAgentId';
 
   agentStatus: AgentTelemetry | null = null;
 
@@ -54,6 +56,7 @@ export class SystemInfoComponent extends BaseComponent implements OnInit {
   }
 
   async ngOnInit(): Promise<void> {
+    this.selectedAgentId = localStorage.getItem(this.selectedAgentStorageKey);
     await this.agentAuthService.initialize();
 
     this.loadAgents();
@@ -76,6 +79,8 @@ export class SystemInfoComponent extends BaseComponent implements OnInit {
             this.selectedAgentId = this.agents[0]?.agentId ?? null;
           }
 
+          this.persistSelectedAgent();
+
           this.cdr.markForCheck();
         },
         error: (error) => {
@@ -91,6 +96,15 @@ export class SystemInfoComponent extends BaseComponent implements OnInit {
 
   onAgentChange(agentId: string): void {
     this.selectedAgentId = agentId;
+    this.persistSelectedAgent();
+  }
+
+  private persistSelectedAgent(): void {
+    if (this.selectedAgentId) {
+      localStorage.setItem(this.selectedAgentStorageKey, this.selectedAgentId);
+    } else {
+      localStorage.removeItem(this.selectedAgentStorageKey);
+    }
   }
 
   checkAgent(): void {
@@ -188,16 +202,34 @@ export class SystemInfoComponent extends BaseComponent implements OnInit {
       });
   }
 
-  async onUnpair(): Promise<void> {
+  onUnpair(): void {
     if (this.isUnpairing) {
       return;
     }
 
-    const confirmed = window.confirm(
-      'Are you sure you want to unpair the CodeGraph Agent?',
-    );
+    this.dialog
+      .open(ConfirmDialogComponent, {
+        width: '420px',
+        maxWidth: 'calc(100vw - 32px)',
+        panelClass: 'confirm-dialog-panel',
+        data: {
+          title: 'Unpair CodeGraph Agent?',
+          message: 'Are you sure you want to unpair the CodeGraph Agent? You can pair it again later.',
+          confirmText: 'Unpair',
+          confirmColor: 'warn',
+        },
+      })
+      .afterClosed()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((confirmed) => {
+        if (confirmed) {
+          void this.unpairAgent();
+        }
+      });
+  }
 
-    if (!confirmed) {
+  private async unpairAgent(): Promise<void> {
+    if (this.isUnpairing) {
       return;
     }
 
