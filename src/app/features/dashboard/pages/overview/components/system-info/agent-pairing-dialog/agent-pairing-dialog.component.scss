@@ -233,6 +233,11 @@ mat-dialog-content {
   font-size: 12px;
 }
 
+.cancel-button {
+  --mat-icon-button-hover-state-layer-opacity: 0;
+  --mat-icon-button-focus-state-layer-opacity: 0;
+}
+
 /* Dialog Actions */
 
 mat-dialog-actions {
