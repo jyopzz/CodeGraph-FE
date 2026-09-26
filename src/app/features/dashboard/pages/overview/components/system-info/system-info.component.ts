@@ -144,9 +144,13 @@ export class SystemInfoComponent extends BaseComponent implements OnInit {
 
           this.agentStatus = null;
           this.isChecking = false;
-          if (notify) {
-            this.notificationService.error('Agent connection check failed. The Agent may be offline.');
-          }
+          const errorMessage =
+            typeof error?.error === 'string'
+              ? error.error
+              : error?.error?.message ?? error?.message ?? 'Unknown error';
+          this.notificationService.error(
+            `Agent connection check failed: ${errorMessage}`,
+          );
           this.cdr.markForCheck();
         },
       });

@@ -1,7 +1,8 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, catchError, from, switchMap } from 'rxjs';
 import { environment } from '../../../environments/environment';
+import { AgentAuthService } from './agent-auth.service';
 
 export interface AgentTelemetry {
   serviceName: string;
@@ -27,6 +28,7 @@ export interface AgentResponse {
 export class AgentService {
 
   private readonly http = inject(HttpClient);
+  private readonly agentAuthService = inject(AgentAuthService);
 
   private readonly apiUrl = environment.agentUrl;
 
@@ -41,6 +43,14 @@ export class AgentService {
 
     return this.http.get<AgentTelemetry>(
       `${this.apiUrl}/telemetry`
+    ).pipe(
+      catchError((telemetryError) =>
+        from(this.agentAuthService.reconnect()).pipe(
+          switchMap(() =>
+            this.http.get<AgentTelemetry>(`${this.apiUrl}/telemetry`),
+          ),
+        ),
+      ),
     );
   }
 
