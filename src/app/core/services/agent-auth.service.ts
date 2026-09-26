@@ -4,11 +4,6 @@ import { BehaviorSubject, firstValueFrom } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { AgentKeyService } from './agent-key.service';
 
-interface AgentStatusResponse {
-  pairingRequired: boolean;
-  pairingCodeExpiresAt?: string;
-}
-
 interface PairResponse {
   challengeId: string;
   challenge: string;
@@ -64,13 +59,6 @@ export class AgentAuthService {
     this.sessionTokenSubject.next(null);
     this.keyService.clear();
   }
-
-  async getStatus(): Promise<AgentStatusResponse> {
-    return firstValueFrom(
-      this.http.get<AgentStatusResponse>(`${this.apiUrl}/status`),
-    );
-  }
-
 
   async verify(
     challengeId: string,

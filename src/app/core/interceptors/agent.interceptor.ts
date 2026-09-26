@@ -18,7 +18,6 @@ export const agentInterceptor: HttpInterceptorFn = (req, next) => {
   // Authentication endpoints do not require
   // an Agent session token.
   if (
-    req.url.endsWith('/auth/status') ||
     req.url.endsWith('/auth/pair') ||
     req.url.endsWith('/auth/verify')
   ) {
